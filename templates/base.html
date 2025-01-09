@@ -1,14 +1,23 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Title</title>
+        <link href="{% static 'css/test.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>FotoBlog</h1>
-        {% block content %}{% endblock content %}
+    <nav>
+        <h1>LITRevu</h1>
         {% if user.is_authenticated %}
-            <p>Vous êtes connecté en tant que {{ request.user }}. <a href="{% url 'logout' %}">Se déconnecter</a></p>
+            <ul>
+                <li><a href="{% url 'home' %}">Flux</a></li>
+                <li>Posts</li>
+                <li>Abonnements</li>
+                <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+            </ul>
         {% endif %}
+    </nav>
+        {% block content %}{% endblock content %}
     </body>
 </html>

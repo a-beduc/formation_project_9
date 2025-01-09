@@ -1,4 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-    <p>Vous êtes connecté !</p>
+    <div>
+        <button role="button" onclick=location.href='{% url 'ticket_upload' %}';>Demander une critique</button>
+        <button role="button" onclick=location.href='';>Créer une critique</button>
+    </div>
+    {% for ticket in tickets %}
+        <h2>{{ ticket.title }}</h2>
+        <p>{{ ticket.description }}</p>
+        {% if ticket.image %}
+            <img src="{{ ticket.image.url }}" alt="whatever">
+        {% else %}
+            <p>Aucune image pour ce ticket</p>
+        {% endif %}
+        <p><a href="{% url 'ticket_edit' ticket.id %}">[modifier]</a></p>
+        <p><a href="{% url 'review_upload' ticket.id %}">[critique]</a></p>
+    {% endfor %}
 {% endblock content %}
