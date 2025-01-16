@@ -24,13 +24,17 @@ import litrevu.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', myauth.views.login_page, name='login'),
-    path('logout/', myauth.views.logout_user, name='logout'),
-    path('home/', litrevu.views.home, name='home'),
-    path('signup/', myauth.views.signup_page, name='signup'),
-    path('ticket/upload/', litrevu.views.ticket_upload, name='ticket_upload'),
-    path('ticket/<int:ticket_id>/', litrevu.views.ticket_edit, name='ticket_edit'),
-    path('review/upload/<int:ticket_id>/', litrevu.views.review_upload, name='review_upload'),
+    path('', myauth.views.LoginView.as_view(), name='login'),
+    path('logout/', myauth.views.LogoutView.as_view(), name='logout'),
+    path('signup/', myauth.views.SignupView.as_view(), name='signup'),
+    path('home/', litrevu.views.HomeView.as_view(), name='home'),
+    path('ticket/create/', litrevu.views.TicketCreateView.as_view(), name='ticket_create'),
+    path('ticket/update/<int:ticket_id>/', litrevu.views.TicketUpdateView.as_view(), name='ticket_update'),
+    path('ticket/delete/<int:ticket_id>/', litrevu.views.TicketDeleteView.as_view(), name='ticket_delete'),
+    path('review/create/<int:ticket_id>/', litrevu.views.ReviewCreateView.as_view(), name='review_create'),
+    path('review/update/<int:review_id>/', litrevu.views.ReviewUpdateView.as_view(), name='review_update'),
+    path('review/delete/<int:review_id>/', litrevu.views.ReviewDeleteView.as_view(), name='review_delete'),
+    path('ticket_review/create/', litrevu.views.TicketReviewCreateView.as_view(), name='ticket_review_create'),
 ]
 
 

@@ -6,4 +6,12 @@
         {{ form.as_p }}
         <button type="submit">Envoyer</button>
     </form>
+    
+    <hr>
+    
+    <form method="post" action="{% url 'ticket_delete' ticket.id %}">
+        {% csrf_token %}
+        <button type="submit">Supprimer</button>
+    </form>
+    
 {% endblock content %}

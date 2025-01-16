@@ -1,0 +1,28 @@
+{%  extends 'base.html' %}
+{% block content %}
+    <div style="border: solid 2px black">
+        <h2>Vous êtes en train de poster en réponse à</h2>
+        <div style="margin:20px; border: dotted 2px black;">
+            <p>{{ ticket.time_created }}</p>
+            <p>{{ ticket.user.username }} a demandé une critique</p>
+            <p>{{ ticket.title }}</p>
+            {% if ticket.description %}
+                <p>{{ ticket.description }}</p>
+            {% endif %}
+            {% if ticket.image %}
+                <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+            {% endif %}
+        </div>
+        <h2>Critique</h2>
+        <form action ="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Envoyer</button>
+        </form>
+        <hr>
+        <form method="post" action="{% url 'review_delete' review.id %}">
+            {% csrf_token %}
+            <button type="submit">Supprimer</button>
+        </form>
+    </div>
+{% endblock content %}

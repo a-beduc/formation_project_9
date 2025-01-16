@@ -1,18 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
     <div>
-        <button role="button" onclick=location.href='{% url 'ticket_upload' %}';>Demander une critique</button>
-        <button role="button" onclick=location.href='';>Créer une critique</button>
+        <button role="button" onclick=location.href="{% url 'ticket_create' %}";>Demander une critique</button>
+        <button role="button" onclick=location.href="{% url 'ticket_review_create' %}";>Créer une critique</button>
     </div>
     {% for ticket in tickets %}
+        <div style="border: solid 2px black;">
+        <p>{{ ticket.user.username }} a demandé une critique</p>
         <h2>{{ ticket.title }}</h2>
         <p>{{ ticket.description }}</p>
         {% if ticket.image %}
             <img src="{{ ticket.image.url }}" alt="whatever">
-        {% else %}
-            <p>Aucune image pour ce ticket</p>
         {% endif %}
-        <p><a href="{% url 'ticket_edit' ticket.id %}">[modifier]</a></p>
-        <p><a href="{% url 'review_upload' ticket.id %}">[critique]</a></p>
+        {% if ticket.user == request.user %}
+            <p><a href="{% url 'ticket_update' ticket.id %}">modifier</a></p>
+        {% endif %}
+        {% if not ticket.review_set.exists %}
+            <p><a href="{% url 'review_create' ticket.id %}">créer une critique</a></p>
+        {% endif %}
+        </div>
+    {% endfor %}
+    <br>
+    {% for review in reviews %}
+        <div style="border: solid 2px black;">
+        <p>demandé par : {{ review.ticket.user.username }} a demandé une critique</p>
+        <h2>{{ review.ticket.title }}</h2>
+        <p>{{ review.ticket.description }}</p>
+        <hr>
+        <p>by {{ review.user.username }}</p>
+        <h2>{{ review.headline }}</h2>
+        <p>{{ review.body }}</p>
+        {% if review.user == request.user %}
+            <p><a href="{% url 'review_update' review.id %}">modifier</a></p>
+        {% endif %}
+        </div>
     {% endfor %}
 {% endblock content %}
