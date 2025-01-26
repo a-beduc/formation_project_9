@@ -11,9 +11,28 @@ class HomeView(View, LoginRequiredMixin):
     template_name = 'litrevu/home.html'
 
     def get(self, request):
-        tickets = models.Ticket.objects.all()
-        reviews = models.Review.objects.all()
-        return render(request, self.template_name, context={'tickets': tickets, 'reviews': reviews})
+        followed = models.UserFollows.objects.filter(user=request.user).values_list('followed_user')
+
+        excluded = models.UserBlocks.objects.filter(user=request.user).values_list('blocked_user')
+
+        reviews = models.Review.objects.filter(
+            Q(user=request.user) |
+            Q(user__in=followed) |
+            Q(ticket__user=request.user) |
+            Q(ticket__user__in=followed)
+        ).annotate(content_type=Value('REVIEW', CharField()))
+
+        for review in reviews:
+            if review.user in excluded:
+                review.blocked = True
+
+        tickets = models.Ticket.objects.filter(
+            Q(user=request.user) |
+            Q(user__in=followed)
+        ).annotate(content_type=Value('TICKET', CharField()))
+
+        posts = sorted(chain(reviews, tickets), key=lambda post: post.time_created, reverse=True)
+        return render(request, self.template_name, context={'posts': posts})
 
 
 class TicketCreateView(View, LoginRequiredMixin):
