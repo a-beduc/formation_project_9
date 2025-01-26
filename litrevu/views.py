@@ -1,7 +1,10 @@
 from django.shortcuts import redirect, render
 from . import forms, models
+from myauth.models import User
+from django.db.models import CharField, Value, Q
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from itertools import chain
 
 
 class HomeView(View, LoginRequiredMixin):
@@ -36,12 +39,12 @@ class TicketUpdateView(View, LoginRequiredMixin):
     form_class = forms.TicketForm
 
     def get(self, request, ticket_id):
-        ticket = models.Ticket.objects.get(pk=ticket_id)
+        ticket = models.Ticket.objects.get(id=ticket_id)
         form = self.form_class(instance=ticket)
         return render(request, self.template_name, context={'form': form, 'ticket': ticket})
 
     def post(self, request, ticket_id):
-        ticket = models.Ticket.objects.get(pk=ticket_id)
+        ticket = models.Ticket.objects.get(id=ticket_id)
         form = self.form_class(request.POST, request.FILES, instance=ticket)
         if form.is_valid():
             form.save()
@@ -50,9 +53,9 @@ class TicketUpdateView(View, LoginRequiredMixin):
 
 
 class TicketDeleteView(View, LoginRequiredMixin):
-    @staticmethod
-    def post(request, ticket_id):
-        ticket = models.Ticket.objects.get(pk=ticket_id)
+
+    def post(self, request, ticket_id):
+        ticket = models.Ticket.objects.get(id=ticket_id)
         if ticket.user == request.user:
             ticket.delete()
             return redirect('home')
@@ -64,7 +67,7 @@ class ReviewCreateView(View, LoginRequiredMixin):
     form_class = forms.ReviewForm
 
     def get(self, request, ticket_id):
-        ticket = models.Ticket.objects.get(pk=ticket_id)
+        ticket = models.Ticket.objects.get(id=ticket_id)
         form = self.form_class()
         return render(request, self.template_name, context={'form': form, 'ticket': ticket})
 
@@ -85,30 +88,26 @@ class ReviewUpdateView(View, LoginRequiredMixin):
     form_class = forms.ReviewForm
 
     def get(self, request, review_id):
-        review = models.Review.objects.get(pk=review_id)
-        ticket = models.Ticket.objects.get(pk=review.ticket.id)
+        review = models.Review.objects.get(id=review_id)
+        ticket = models.Ticket.objects.get(id=review.ticket.id)
         form = self.form_class(instance=review)
         return render(request, self.template_name, context={'form': form, 'ticket': ticket, 'review': review})
 
     def post(self, request, review_id):
-        review = models.Review.objects.get(pk=review_id)
-        # not sure if I need to call ticket objet when modifying review, link between ticket and review should
-        # already exist, and shouldn't be changed <<< Need to ask s/o
-        ticket = models.Ticket.objects.get(pk=review.ticket.id)
+        review = models.Review.objects.get(id=review_id)
+        ticket = models.Ticket.objects.get(id=review.ticket.id)
         form = self.form_class(request.POST, instance=review)
         if form.is_valid():
             review = form.save(commit=False)
-            review.ticket = ticket
-            review.user = request.user
             review.save()
             return redirect('home')
         return render(request, self.template_name, context={'form': form, 'ticket': ticket})
 
 
 class ReviewDeleteView(View, LoginRequiredMixin):
-    @staticmethod
-    def post(request, review_id):
-        review = models.Ticket.objects.get(pk=review_id)
+    def post(self, request, review_id):
+        review = models.Review.objects.get(id=review_id)
+
         if review.user == request.user:
             review.delete()
             return redirect('home')
@@ -128,8 +127,8 @@ class TicketReviewCreateView(View, LoginRequiredMixin):
     def post(self, request):
         ticket_form = self.ticket_form_class(request.POST, request.FILES)
         review_form = self.review_form_class(request.POST)
-        if ticket_form.is_valid() and review_form.is_valid():
 
+        if ticket_form.is_valid() and review_form.is_valid():
             ticket = ticket_form.save(commit=False)
             ticket.user = request.user
             ticket.save()
