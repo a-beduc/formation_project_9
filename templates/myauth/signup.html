@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Inscription</h2>
-    {%  if form.errors %}
-        {{ forms.errors }}
-    {% endif %}
-    <form method="post">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <button role="button" onclick="location.href='{% url 'login' %}'">Retourner</button>
-        <button type="submit">S'inscrire</button>
-    </form>
+    <div class="signupPage">
+        <div class="signupPage__container">
+            <h2 class="signupPage__title">Inscrivez-vous</h2>
+            <form class="signupPage__form" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="signupPage__blockButton">
+                    <button type="button" role="button" onclick="location.href='{% url 'login' %}'"
+                            class="signupPage__button">Retourner</button>
+                    <button type="submit" role="button" class="signupPage__button">S'inscrire</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock content %}
