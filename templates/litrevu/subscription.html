@@ -1,0 +1,81 @@
+{%  extends 'base.html' %}
+{% block content %}
+    <div class="subscriptionPage">
+        <div class="newRelationBlock">
+            <h2 class="newRelationBlock__title">Suivre d'autres utilisateurs</h2>
+            <form method="POST" action="{% url 'subscription_follow' %}" class="newRelationBlock__form">
+                {% csrf_token %}
+                {{ follow_form.as_p }}
+                <button type="submit" role="button" class="newRelationBlock__button">Envoyer</button>
+            </form>
+        </div>
+        <div class="relationBlock">
+            <h2 class="relationBlock__title">Abonnements</h2>
+            <table class="relationBlock__table">
+            {% for follow in followed %}
+                <tr class="relationBlock__tr">
+                    <td class="relationBlock__td">
+                        {{ follow.followed_user.username }}
+                    </td>
+                    <td class="relationBlock__td relationBlock__td--button">
+                        <form method="post" 
+                              action="{% url 'subscription_follow_delete' follow.id %}"
+                              class="relationBlock__form">
+                            {% csrf_token %}
+                            <button role="button" 
+                                    type="submit"
+                                    class="relationBlock__button">
+                            Se désabonner
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+        <div class="relationBlock">
+            <h2 class="relationBlock__title">Abonnés</h2>
+            <table class="relationBlock__table">
+            {% for follow in following %}
+                <tr class="relationBlock__tr">
+                    <td class="relationBlock__td">
+                        {{ follow.user.username }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+        <div class="newRelationBlock">
+            <h2 class="newRelationBlock__title">Blocker d'autres utilisateurs</h2>
+            <form method="POST" action="{% url 'subscription_block' %}"  class="newRelationBlock__form">
+                {% csrf_token %}
+                {{ block_form.as_p }}
+                <button type="submit" role="button" class="newRelationBlock__button">Bloquer</button>
+            </form>
+        </div>
+        <div class="relationBlock">
+            <h2 class="relationBlock__title">Utilisateurs blockés</h2>
+            <table class="relationBlock__table">
+            {% for block in blocked %}
+                <tr class="relationBlock__tr">
+                    <td class="relationBlock__td">
+                        {{ block.blocked_user.username }}
+                    </td>
+                    <td class="relationBlock__td relationBlock__td--button">
+                        <form method="post" 
+                              action="{% url 'subscription_block_delete' block.id %}"
+                              class="relationBlock__form">
+                            {% csrf_token %}
+                            <button role="button" 
+                                    type="submit"
+                                    class="relationBlock__button">
+                            Débloquer
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock content %}
