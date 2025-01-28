@@ -1,0 +1,601 @@
+$primary-color: #FFF1E5;
+$secondary-color: #F4DECB;
+$tertiary-color: #7D6B91;
+$quaternary-color: #FB5607;
+$quinary-color: #00100B;
+
+$navbar-height: 5rem;
+
+$tiny-font-size:12px;
+$small-font-size:16px;
+$medium-font-size:20px;
+$big-font-size:24px;
+$huge-font-size:32px;
+
+html {
+  overflow-y: scroll;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, a, button {
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: $primary-color;
+  color: $quinary-color;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+}
+
+@mixin basic-button {
+    appearance: none;
+    background-color: $quaternary-color;
+    border: transparent;
+    border-radius: 15px;
+    color: $primary-color;
+    cursor: pointer;
+    display: inline-block;
+    //font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: $medium-font-size;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    min-height: 3rem;
+    min-width: 0;
+    outline: none;
+    padding: 1.2rem 2.3rem;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+
+  &:disabled {
+    pointer-events: none;
+  }
+
+  &:hover {
+    color: $primary-color;
+    background-color: $quaternary-color;
+    border: transparent;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(0) scale(0.95);
+
+  }
+}
+
+@mixin loginInput {
+  all: unset;
+  padding: 1rem 2rem;
+  border: 1px solid $quinary-color;
+  border-radius: 3px;
+  font-size: $medium-font-size;
+  box-sizing: border-box;
+}
+
+.navbar {
+  padding:0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  background: $tertiary-color;
+  height: $navbar-height;
+  position: relative;
+  width: 100%;
+  color: $quinary-color;
+
+  &__title {
+    margin: 0 auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+    font-size: $huge-font-size;
+    line-height: 5rem;
+  }
+
+  &__list {
+    display:flex;
+    list-style-type: none;
+    align-items: center;
+    gap:2rem;
+  }
+
+  &__li {
+    transition-property: text-decoration, transform;
+    transition-duration: 0.1s;
+    padding: 2px 0;
+  }
+
+  &__li:hover {
+    padding: 1px 0;
+    transform: translateY(-2px);
+    text-decoration: underline;
+    text-decoration-color: $primary-color;
+  }
+
+  &__link {
+    text-decoration: none;
+    color: $primary-color;
+    font-weight: 400;
+    font-size: $medium-font-size;
+  }
+
+  &__link:hover {
+    color: lighten($primary-color, 30%);
+  }
+}
+
+.homeBlock {
+  width: 60%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5rem;
+    padding: 5rem 0 3rem 0;
+
+    /* button */
+    &__button {
+      position: relative;
+      margin: auto;
+      padding: 12px 18px;
+      transition: all 0.2s ease;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    &__button:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      border-radius: 50px;
+      background: $secondary-color;
+      width: 45px;
+      height: 45px;
+      transition: all 0.3s ease;
+    }
+
+    &__button span {
+      position: relative;
+      //font-family: "Ubuntu", sans-serif;
+      font-size: $small-font-size;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: $quinary-color;
+    }
+
+    &__button svg {
+      visibility: hidden;
+      position: relative;
+      top: 0;
+      margin-left: 10px;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke: $primary-color;
+      stroke-width: 2;
+      transform: translateX(-5px);
+      transition: all 0.3s ease;
+    }
+
+    &__button:hover:before {
+      width: 100%;
+      background: $quaternary-color;
+    }
+
+    &__button:hover svg {
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    &__button:hover span {
+      color: $primary-color;
+    }
+
+    &__button:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &__feed {
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+  }
+}
+
+
+/* Style for myauth/login.html */
+.loginPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - $navbar-height);
+
+  &__container {
+    display: flex;
+    gap: 5rem;
+    align-items: flex-start;
+  }
+
+  .registerBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+
+    &__button{
+      @include basic-button;
+    }
+  }
+
+  .loginBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+
+    &__form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap:1rem;
+    }
+
+    &__input {
+      @include loginInput;
+    }
+
+    &__button {
+      @include basic-button;
+      align-self: end;
+    }
+  }
+}
+
+/* Style for myauth/signup.html */
+
+.signupPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - $navbar-height);
+
+  &__container {
+    min-width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap:1rem;
+  }
+
+  &__title {
+    align-self: center;
+    padding: 0 0 2rem 0;
+  }
+
+  &__form {
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      align-items: stretch;
+      gap:1rem;
+    }
+
+  &__input {
+    @include loginInput;
+    width:100%;
+    text-align: center;
+  }
+
+  &__blockButton {
+    display: flex;
+    align-self: end;
+    gap: 1rem;
+  }
+
+  &__button {
+    @include basic-button;
+  }
+}
+
+/* Style for litrevu/subscription.html */
+
+.subscriptionPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  padding: 2rem 0;
+  width: 100%;
+
+  .newRelationBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1rem;
+    min-width: 65%;
+
+    &__title {
+      text-align: center;
+    }
+
+    &__form {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap:1rem;
+
+      p {
+        flex: 1;
+      }
+    }
+
+    &__input {
+      @include loginInput;
+      width: 100%;
+      text-align: center;
+  }
+
+    &__button {
+      @include basic-button;
+    }
+  }
+
+  .relationBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1rem;
+    min-width: 70%;
+
+    &__title {
+      text-align: center;
+    }
+
+    &__table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid $quinary-color;
+    }
+
+    &__form {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+
+    &__td {
+      padding: 0.8rem 1.5rem;
+      text-align: left;
+      vertical-align: middle;
+      border: 1px solid $quinary-color;
+      font-size: $small-font-size;
+    }
+
+    &__td--button {
+      width: 15%;
+      white-space: nowrap;
+      background-color: $quinary-color;
+      color: $primary-color;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        outline: 1px solid $quinary-color;
+        transform: scale(1.1);
+        background-color: $primary-color;
+        color: $quinary-color;
+      }
+    }
+
+    &__button {
+      font-size: inherit;
+      color: inherit;
+      background-color: transparent;
+      border: inherit;
+      cursor: pointer;
+      text-align: center;
+    }
+  }
+}
+
+/* style for post.html */
+
+.postBlock {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  padding: 1rem;
+}
+
+/* style for ticket_snippet.html */
+
+.ticket {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: $secondary-color;
+  border-top: 0;
+  border-radius: 5px;
+  gap: 1rem;
+  box-shadow: rgba($quinary-color, 0.5) 3px 3px;
+  padding-bottom: 1rem;
+
+  &__type {
+    text-align: center;
+    padding: 1rem;
+    background-color: $tertiary-color;
+    color: $primary-color;
+    text-shadow: rgb($quinary-color, 0.5) 2px 1px;
+    border-radius: 5px 5px 0 0;
+    font-size: $medium-font-size;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: flex-start;
+    margin: 0 1rem;
+  }
+
+  &__imageBlock {
+    flex-shrink: 0;
+    width: 25%;
+    height: 100%;
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+  }
+
+  &__content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    h3 {
+      font-size: $big-font-size;
+    }
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    p {
+      font-style: italic;
+      opacity: 0.7;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1rem 1rem 0 1rem;
+
+    .ticket__button {
+      @include basic-button;
+      line-height: 1.2;
+      padding: 0.5rem 1rem;
+      min-height: 0;
+      border-radius: 8px;
+      font-size: $small-font-size;
+      font-weight: 600;
+    }
+  }
+}
+
+.review {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: $secondary-color;
+  border-top: 0;
+  border-radius: 5px;
+  box-shadow: rgba($quinary-color, 0.5) 3px 3px;
+
+    &__type {
+    text-align: center;
+    padding: 1rem;
+    background-color: $tertiary-color;
+    color: $primary-color;
+    text-shadow: rgb($quinary-color, 0.5) 2px 1px;
+    border-radius: 5px 5px 0 0;
+    font-size: $medium-font-size;
+  }
+
+  &__body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    p {
+      font-style: italic;
+      opacity: 0.7;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0.5rem;
+
+    .review__button {
+      @include basic-button;
+      line-height: 1.2;
+      padding: 0.5rem 1rem;
+      min-height: 0;
+      border-radius: 8px;
+      font-size: $small-font-size;
+      font-weight: 600;
+    }
+  }
+
+  &__ticket {
+    border: 1px solid $quinary-color;
+    border-radius: 5px;
+
+    .ticket {
+      padding-top: 1rem;
+    }
+  }
+}
