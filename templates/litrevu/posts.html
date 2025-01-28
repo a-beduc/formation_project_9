@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="postBlock">
+        {% for post in posts %}
+            {% if post.content_type == 'TICKET' %}
+                {% include 'litrevu/snippet_ticket.html' with ticket=post %}
+            {% elif post.content_type == 'REVIEW' %}
+                {% include 'litrevu/snippet_review.html' with review=post %}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock content %}
