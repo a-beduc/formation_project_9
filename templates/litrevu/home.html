@@ -1,38 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div>
-        <button role="button" onclick=location.href="{% url 'ticket_create' %}";>Demander une critique</button>
-        <button role="button" onclick=location.href="{% url 'ticket_review_create' %}";>Créer une critique</button>
+    <div class="homeBlock">
+        <div class="homeBlock__top">
+            <button type="button" role="button" onclick=location.href="{% url 'ticket_create' %}"; 
+                    class="homeBlock__top__button">
+                <span>Demander une critique</span>
+                <svg width="15px" height="10px" viewBox="0 0 13 10">
+                    <path d="M1,5 L11,5"></path>
+                    <polyline points="8 1 12 5 8 9"></polyline>
+                </svg>
+            </button>
+            <button type="button" role="button" onclick=location.href="{% url 'ticket_review_create' %}";
+                    class="homeBlock__top__button">
+                <span>Créer une critique</span>
+                <svg width="15px" height="10px" viewBox="0 0 13 10">
+                    <path d="M1,5 L11,5"></path>
+                    <polyline points="8 1 12 5 8 9"></polyline>
+                </svg>
+            </button>
+        </div>
+        <div class="homeBlock__feed">
+            {% for post in posts %}
+                {% if post.content_type == 'TICKET' %}
+                    <div>
+                        {% include 'litrevu/snippet_ticket.html' with ticket=post %}
+                    </div>
+                    
+                {% elif post.content_type == 'REVIEW' %}
+                    <div>
+                        {% include 'litrevu/snippet_review.html' with blocked=post.blocked review=post %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
-    {% for ticket in tickets %}
-        <div style="border: solid 2px black;">
-        <p>{{ ticket.user.username }} a demandé une critique</p>
-        <h2>{{ ticket.title }}</h2>
-        <p>{{ ticket.description }}</p>
-        {% if ticket.image %}
-            <img src="{{ ticket.image.url }}" alt="whatever">
-        {% endif %}
-        {% if ticket.user == request.user %}
-            <p><a href="{% url 'ticket_update' ticket.id %}">modifier</a></p>
-        {% endif %}
-        {% if not ticket.review_set.exists %}
-            <p><a href="{% url 'review_create' ticket.id %}">créer une critique</a></p>
-        {% endif %}
-        </div>
-    {% endfor %}
-    <br>
-    {% for review in reviews %}
-        <div style="border: solid 2px black;">
-        <p>demandé par : {{ review.ticket.user.username }} a demandé une critique</p>
-        <h2>{{ review.ticket.title }}</h2>
-        <p>{{ review.ticket.description }}</p>
-        <hr>
-        <p>by {{ review.user.username }}</p>
-        <h2>{{ review.headline }}</h2>
-        <p>{{ review.body }}</p>
-        {% if review.user == request.user %}
-            <p><a href="{% url 'review_update' review.id %}">modifier</a></p>
-        {% endif %}
-        </div>
-    {% endfor %}
 {% endblock content %}
