@@ -1,0 +1,46 @@
+<div class="ticket">
+    {% if not ticket_in_review|default:False %}
+        <h3 class="ticket__type">Demande de critique</h3>
+    {% endif %}
+    <div class="ticket__body">
+        {% if ticket.image %}
+            <div class="ticket__imageBlock">
+                <img src="{{ ticket.image.url }}" alt="image of {{ ticket.title }}" class="ticket__image">
+            </div>
+        {% endif %}
+        <div class="ticket__content">
+            <h3 class="ticket__title">{{ ticket.title }}</h3>
+            <div class="ticket__details">
+                <p class="ticket__creator"> {% if request.user.username == ticket.user.username %}
+                        Vous avez demandé une critique
+                    {% else %}
+                        {{ ticket.user.username }} a demandé une critique
+                    {% endif %}
+                </p>
+                <p class="ticket__time">{{ ticket.time_created }}</p>
+            </div>
+            {% if ticket.description %}
+                <p class="ticket__description">{{ ticket.description }}</p>
+            {% endif %}
+        </div>
+    </div>
+    
+{% if ticket.user == request.user and not ticket_in_review|default:False or not ticket.review_set.exists %}
+    <div class="ticket__actions">
+        {% if ticket.user == request.user and not ticket_in_review|default:False %}
+            <form method="post" action="{% url 'ticket_delete' ticket.id %}">
+                {% csrf_token %}
+                <button type="submit" role="button" class="ticket__button">Supprimer</button>
+            </form>
+            <p>
+                <a role="button" href="{% url 'ticket_update' ticket.id %}" class="ticket__button">Modifier</a>
+            </p>
+        {% endif %}
+        {% if not ticket.review_set.exists %}
+            <p>
+                <a role="button" href="{% url 'review_create' ticket.id %}" class="ticket__button">Créer une critique</a>
+            </p>
+        {% endif %}
+    </div>
+{% endif %}
+</div>
