@@ -4,17 +4,22 @@
     <head>
         <meta charset="UTF-8">
         <title>Title</title>
-        <link href="{% static 'css/test.css' %}" rel="stylesheet">
+        <link rel="icon" href="{% static 'media/logo-2.ico' %}">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        {% block scriptjs %}{% endblock scriptjs %}
     </head>
     <body>
-    <nav>
-        <h1>LITRevu</h1>
+    <nav class="navbar">
+        <h1 class="navbar__title">LITReview</h1>
         {% if user.is_authenticated %}
-            <ul>
-                <li><a href="{% url 'home' %}">Flux</a></li>
-                <li>Posts</li>
-                <li>Abonnements</li>
-                <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+            <ul class="navbar__list">
+                <li class="navbar__li"><a href="{% url 'home' %}" class="navbar__link">Flux</a></li>
+                <li class="navbar__li"><a href="{% url 'posts' %}" class="navbar__link">Posts</a></li>
+                <li class="navbar__li"><a href="{% url 'subscription_follow' %}" class="navbar__link">Abonnements</a></li>
+                <li class="navbar__li"><a href="{% url 'logout' %}" class="navbar__link">Se déconnecter</a></li>
             </ul>
         {% endif %}
     </nav>
