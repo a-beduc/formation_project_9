@@ -1,15 +1,28 @@
 {% extends 'base.html' %}
 {%  block content %}
-    <div>
-        <h2>Inscrivez-vous maintenant</h2>
-        <button role="button" onclick="location.href='{% url 'signup' %}'">S'inscrire</button>
-    </div>
-    <div>
-    <h2>Connectez-vous</h2>
-        <form method="post">
-            {{ form.as_p }}
-            {% csrf_token %}
-            <button type="submit">Se connecter</button>
-        </form>
+    <div class="loginPage">
+        <div class="loginPage__container">
+            <div class="registerBlock">
+                <h2 class="registerBlock__title">Inscrivez-vous maintenant</h2>
+                <button role="button" onclick="location.href='{% url 'signup' %}'"
+                        class="registerBlock__button">
+                    S'inscrire</button>
+            </div>
+            <div class="loginBlock">
+            <h2 class="loginBlock__title">Connectez-vous</h2>
+                <form method="post" class="loginBlock__form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button role="button" type="submit" class="loginBlock__button">Se connecter</button>
+                    {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
     </div>
 {%  endblock content %}
