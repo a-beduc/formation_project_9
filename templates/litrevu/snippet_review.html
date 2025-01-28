@@ -1,0 +1,44 @@
+<div class="review">
+
+    <h3 class="review__type">Critique</h3>
+
+    <div class="review__body">
+        {% if blocked %}
+            <div class="review__details">
+                <p class="review_creator">
+                L'utilisateur bloqué {{ review.user.username }} a publié une critique
+                </p>
+            </div>
+        {% else %}
+            <h3 class="review__title">{{ review.headline }} - {{ review.rating }}</h3>
+            <div class="review__details">
+                <p class="review_creator">
+                    {% if request.user.username == review.user.username %}
+                        Vous avez publié une critique
+                    {% else %}
+                        {{ review.user.username }} a publié une critique
+                    {% endif %}
+                </p>
+                <p class="review_time">{{ review.time_created }}</p>
+            </div>
+            <p class="review__description">{{ review.body }}</p>
+        {% endif %}
+    
+        <div class="review__ticket">
+            {% include 'litrevu/snippet_ticket.html' with ticket=review.ticket ticket_in_review=True %}
+        </div>
+        
+        {% if review.user == request.user  %}
+            <div class="review__actions">
+                <form method="post" action="{% url 'review_delete' review.id %}">
+                    {% csrf_token %}
+                    <button type="submit" role="button" class="review__button">Supprimer</button>
+                </form>
+                <p>
+                    <a href="{% url 'review_update' review.id %}" role="button" class="review__button">Modifier</a>
+                </p>
+            </div>
+        {% endif %}
+    
+    </div>
+</div>
