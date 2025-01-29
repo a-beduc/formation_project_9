@@ -24,23 +24,25 @@
             {% endif %}
         </div>
     </div>
-    
-{% if ticket.user == request.user and not ticket_in_review|default:False or not ticket.review_set.exists %}
-    <div class="ticket__actions">
-        {% if ticket.user == request.user and not ticket_in_review|default:False %}
-            <form method="post" action="{% url 'ticket_delete' ticket.id %}">
-                {% csrf_token %}
-                <button type="submit" role="button" class="ticket__button">Supprimer</button>
-            </form>
-            <p>
-                <a role="button" href="{% url 'ticket_update' ticket.id %}" class="ticket__button">Modifier</a>
-            </p>
-        {% endif %}
-        {% if not ticket.review_set.exists %}
-            <p>
-                <a role="button" href="{% url 'review_create' ticket.id %}" class="ticket__button">Créer une critique</a>
-            </p>
-        {% endif %}
-    </div>
+
+{% if not current_review|default:False %}
+    {% if ticket.user == request.user and not ticket_in_review|default:False or not ticket.review_set.exists %}
+        <div class="ticket__actions">
+            {% if ticket.user == request.user and not ticket_in_review|default:False %}
+                <form method="post" action="{% url 'ticket_delete' ticket.id %}">
+                    {% csrf_token %}
+                    <button type="submit" role="button" class="ticket__button">Supprimer</button>
+                </form>
+                <p>
+                    <a role="button" href="{% url 'ticket_update' ticket.id %}" class="ticket__button">Modifier</a>
+                </p>
+            {% endif %}
+            {% if not ticket.review_set.exists %}
+                <p>
+                    <a role="button" href="{% url 'review_create' ticket.id %}" class="ticket__button">Créer une critique</a>
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endif %}
 </div>
