@@ -1,3 +1,4 @@
+{% load filter %}
 <div class="review">
 
     <h3 class="review__type">Critique</h3>
@@ -10,18 +11,20 @@
                 </p>
             </div>
         {% else %}
-            <h3 class="review__title">{{ review.headline }} - {{ review.rating }}</h3>
-            <div class="review__details">
-                <p class="review_creator">
-                    {% if request.user.username == review.user.username %}
-                        Vous avez publié une critique
-                    {% else %}
-                        {{ review.user.username }} a publié une critique
-                    {% endif %}
-                </p>
-                <p class="review_time">{{ review.time_created }}</p>
+            <div class="review__content">
+                <h3 class="review__title">{{ review.headline }} - {{ review.rating|star_rating }}</h3>
+                <div class="review__details">
+                    <p class="review_creator">
+                        {% if request.user.username == review.user.username %}
+                            Vous avez publié une critique
+                        {% else %}
+                            {{ review.user.username }} a publié une critique
+                        {% endif %}
+                    </p>
+                    <p class="review_time">{{ review.time_created }}</p>
+                </div>
+                <p class="review__description">{{ review.body }}</p>
             </div>
-            <p class="review__description">{{ review.body }}</p>
         {% endif %}
     
         <div class="review__ticket">
