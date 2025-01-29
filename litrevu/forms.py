@@ -19,10 +19,15 @@ class TicketForm(forms.ModelForm):
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = models.Review
-        fields = ['headline', 'rating', 'body']
+        fields = ['headline', 'body', 'rating']
+        labels = {'headline': 'Titre* ', 'rating': 'Note* ', 'body': 'Commentaire* '}
 
-        def __init__(self):
-            pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['headline'].widget.attrs.update({'class': 'formReview__title'})
+        self.fields['rating'].widget.attrs.update({'class': 'formReview__hidden'})
+        self.fields['body'].widget = forms.Textarea(attrs={'class': 'formReview__body'})
+
 
 
 class UserFollowsForm(forms.Form):
