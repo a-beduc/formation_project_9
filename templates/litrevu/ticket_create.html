@@ -1,9 +1,17 @@
 {%  extends 'base.html' %}
+{% load static %}
+{% block scriptjs %}
+    <script src="{% static 'js/customBrowse.js' %}" defer></script>
+{% endblock scriptjs %}
 {% block content %}
-    <h2>Créer un ticket</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Envoyer</button>
-    </form>
+    <div class="formTicket">
+        <h2 class="formTicket__type">Créer un ticket</h2>
+        <form method="post" enctype="multipart/form-data" class="formTicket__form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="formTicket__action">
+                <button type="submit" role="button" class="formTicket__button">Envoyer</button>
+            </div>
+        </form>
+    </div>
 {% endblock content %}

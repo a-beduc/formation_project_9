@@ -1,20 +1,29 @@
-{%  extends 'base.html' %}
-{#{% block scriptjs %}#}
-{#    <script href="link">#}
-{#{% endblock scriptjs %}#}
+{% extends 'base.html' %}
+{% load static %}
+{% block scriptjs %}
+    <script src="{% static 'js/customRating.js' %}" defer></script>
+{% endblock scriptjs %}
 {% block content %}
-    <div style="border: solid 2px black">
-        <h2>Vous êtes en train de poster en réponse à</h2>
-        <div>
-            <div>
-                {% include 'litrevu/snippet_ticket.html' with ticket=ticket %}
-            </div>
+    <div class="formReview">
+        <h2 class="formReview__type">Vous êtes en train de poster en réponse à</h2>
+        <div class="formReview__ticket">
+            {% include 'litrevu/snippet_ticket.html' with ticket=ticket current_review=True %}
         </div>
-        <h2>Critique</h2>
-        <form action ="" method="post" enctype="multipart/form-data">
+        <h2 class="formReview__type">Critique</h2>
+        <form action ="" method="post" enctype="multipart/form-data" class="formReview__form">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Envoyer</button>
+            <div class="formReview__stars">
+                <span class="formReview__stars__elem fa-stop" onclick="gfg(0)"></span>
+                <span class="formReview__stars__elem fa-star" onclick="gfg(1)"></span>
+                <span class="formReview__stars__elem fa-star" onclick="gfg(2)"></span>
+                <span class="formReview__stars__elem fa-star" onclick="gfg(3)"></span>
+                <span class="formReview__stars__elem fa-star" onclick="gfg(4)"></span>
+                <span class="formReview__stars__elem fa-star" onclick="gfg(5)"></span>
+            </div>
+            <div class="formReview__action">
+                <button type="submit" role="button" class="formReview__button">Envoyer</button>
+            </div>
         </form>
     </div>
 {% endblock content %}
