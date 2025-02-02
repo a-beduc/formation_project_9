@@ -20,10 +20,14 @@ class LoginView(View):
     form_class = forms.LoginForm
 
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('home')
         form = self.form_class()
         return render(request, self.template_name, context={'form': form})
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('home')
         form = self.form_class(request.POST)
         if form.is_valid():
             user = authenticate(
@@ -43,10 +47,14 @@ class SignupView(View):
     form_class = forms.SignupForm
 
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('home')
         form = self.form_class()
         return render(request, self.template_name, context={'form': form})
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('home')
         form = self.form_class(request.POST)
         if form.is_valid():
             user = form.save()
