@@ -1,6 +1,3 @@
 /.idea
 /.venv
 .env
-db.sqlite3
-/myauth/migrations
-/litrevu/migrations
