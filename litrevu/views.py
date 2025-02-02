@@ -20,7 +20,7 @@ class HomeView(View, LoginRequiredMixin):
             Q(user__in=followed) |
             Q(ticket__user=request.user) |
             Q(ticket__user__in=followed)
-        ).annotate(content_type=Value('REVIEW', CharField()))
+        )
 
         for review in reviews:
             if review.user in excluded:
@@ -29,7 +29,7 @@ class HomeView(View, LoginRequiredMixin):
         tickets = models.Ticket.objects.filter(
             Q(user=request.user) |
             Q(user__in=followed)
-        ).annotate(content_type=Value('TICKET', CharField()))
+        )
 
         posts = sorted(chain(reviews, tickets), key=lambda post: post.time_created, reverse=True)
         return render(request, self.template_name, context={'posts': posts})
@@ -295,8 +295,6 @@ class PostsView(View, LoginRequiredMixin):
 
     def get(self, request):
         reviews = models.Review.objects.filter(user=request.user)
-        reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
         tickets = models.Ticket.objects.filter(user=request.user)
-        tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
         posts = sorted(chain(reviews, tickets), key=lambda post: post.time_created, reverse=True)
         return render(request, self.template_name, context={'posts': posts})

@@ -16,4 +16,10 @@ def star_rating(value):
     return mark_safe(stars_html)
 
 
+@register.filter(name='model_type')
+def model_type(value):
+    return type(value).__name__
+
+
 register.filter("star_rating", star_rating)
+register.filter("model_type", model_type)

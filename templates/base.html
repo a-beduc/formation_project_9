@@ -12,17 +12,17 @@
         {% block scriptjs %}{% endblock scriptjs %}
     </head>
     <body>
-    <nav class="navbar">
-        <h1 class="navbar__title">LITReview</h1>
-        {% if user.is_authenticated %}
-            <ul class="navbar__list">
-                <li class="navbar__li"><a href="{% url 'home' %}" class="navbar__link">Flux</a></li>
-                <li class="navbar__li"><a href="{% url 'posts' %}" class="navbar__link">Posts</a></li>
-                <li class="navbar__li"><a href="{% url 'subscription_follow' %}" class="navbar__link">Abonnements</a></li>
-                <li class="navbar__li"><a href="{% url 'logout' %}" class="navbar__link">Se déconnecter</a></li>
-            </ul>
-        {% endif %}
-    </nav>
+        <nav class="navbar">
+            <h1 onclick="location.href='{% url 'home' %}'" class="navbar__title">LITReview</h1>
+            {% if user.is_authenticated %}
+                <ul class="navbar__list">
+                    <li class="navbar__li"><a href="{% url 'home' %}" class="navbar__link {% if request.path == '/home/' %}navbar__active{% endif %}">Flux</a></li>
+                    <li class="navbar__li"><a href="{% url 'posts' %}" class="navbar__link {% if request.path == '/posts/' %}navbar__active{% endif %} ">Posts</a></li>
+                    <li class="navbar__li"><a href="{% url 'subscription_follow' %}" class="navbar__link {% if '/subscription/' in request.path %}navbar__active{% endif %} ">Abonnements</a></li>
+                    <li class="navbar__li"><a href="{% url 'logout' %}" class="navbar__link">Se déconnecter</a></li>
+                </ul>
+            {% endif %}
+        </nav>
         {% block content %}{% endblock content %}
     </body>
 </html>

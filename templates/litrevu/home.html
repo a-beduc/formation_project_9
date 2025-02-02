@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load filter %}
+
 {% block content %}
     <div class="homeBlock">
         <div class="homeBlock__top">
@@ -21,12 +23,12 @@
         </div>
         <div class="homeBlock__feed">
             {% for post in posts %}
-                {% if post.content_type == 'TICKET' %}
+                {% if post|model_type == 'Ticket' %}
                     <div>
                         {% include 'litrevu/snippet_ticket.html' with ticket=post %}
                     </div>
                     
-                {% elif post.content_type == 'REVIEW' %}
+                {% elif post|model_type == 'Review' %}
                     <div>
                         {% include 'litrevu/snippet_review.html' with blocked=post.blocked review=post %}
                     </div>
