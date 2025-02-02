@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from itertools import chain
 
 
-class HomeView(View, LoginRequiredMixin):
+class HomeView(LoginRequiredMixin, View):
     template_name = 'litrevu/home.html'
 
     def get(self, request):
@@ -35,7 +35,7 @@ class HomeView(View, LoginRequiredMixin):
         return render(request, self.template_name, context={'posts': posts})
 
 
-class TicketCreateView(View, LoginRequiredMixin):
+class TicketCreateView(LoginRequiredMixin, View):
     template_name = 'litrevu/ticket_create.html'
     form_class = forms.TicketForm
 
@@ -53,7 +53,7 @@ class TicketCreateView(View, LoginRequiredMixin):
         return render(request, self.template_name, context={'form': form})
 
 
-class TicketUpdateView(View, LoginRequiredMixin):
+class TicketUpdateView(LoginRequiredMixin, View):
     template_name = 'litrevu/ticket_update.html'
     form_class = forms.TicketForm
 
@@ -71,7 +71,7 @@ class TicketUpdateView(View, LoginRequiredMixin):
         return render(request, self.template_name, context={'form': form})
 
 
-class TicketDeleteView(View, LoginRequiredMixin):
+class TicketDeleteView(LoginRequiredMixin, View):
 
     def post(self, request, ticket_id):
         ticket = models.Ticket.objects.get(id=ticket_id)
@@ -81,9 +81,18 @@ class TicketDeleteView(View, LoginRequiredMixin):
         return redirect('home')
 
 
-class ReviewCreateView(View, LoginRequiredMixin):
-    template_name = 'litrevu/review_create.html'
+class ReviewBaseView(LoginRequiredMixin, View):
     form_class = forms.ReviewForm
+    template_name = ''
+
+    def get(self, request, ticket_id):
+        ticket = models.Ticket.objects.get(id=ticket_id)
+        form = self.form_class()
+        return render(request, self.template_name, context={'form': form, 'ticket': ticket})
+
+
+class ReviewCreateView(ReviewBaseView):
+    template_name = 'litrevu/review_create.html'
 
     def get(self, request, ticket_id):
         ticket = models.Ticket.objects.get(id=ticket_id)
@@ -102,7 +111,7 @@ class ReviewCreateView(View, LoginRequiredMixin):
         return render(request, self.template_name, context={'form': form, 'ticket': ticket})
 
 
-class ReviewUpdateView(View, LoginRequiredMixin):
+class ReviewUpdateView(LoginRequiredMixin, View):
     template_name = 'litrevu/review_update.html'
     form_class = forms.ReviewForm
 
@@ -123,7 +132,7 @@ class ReviewUpdateView(View, LoginRequiredMixin):
         return render(request, self.template_name, context={'form': form, 'ticket': ticket})
 
 
-class ReviewDeleteView(View, LoginRequiredMixin):
+class ReviewDeleteView(LoginRequiredMixin, View):
     def post(self, request, review_id):
         review = models.Review.objects.get(id=review_id)
 
@@ -133,7 +142,7 @@ class ReviewDeleteView(View, LoginRequiredMixin):
         return redirect('home')
 
 
-class TicketReviewCreateView(View, LoginRequiredMixin):
+class TicketReviewCreateView(LoginRequiredMixin, View):
     template_name = 'litrevu/ticket_review_create.html'
     ticket_form_class = forms.TicketForm
     review_form_class = forms.ReviewForm
@@ -161,7 +170,7 @@ class TicketReviewCreateView(View, LoginRequiredMixin):
         return render(request, self.template_name, context={'ticket_form': ticket_form, 'review_form': review_form})
 
 
-class UserFollowsView(View, LoginRequiredMixin):
+class UserFollowsView(LoginRequiredMixin, View):
     template_name = 'litrevu/subscription.html'
     form_class = forms.UserFollowsForm
 
@@ -218,7 +227,7 @@ class UserFollowsView(View, LoginRequiredMixin):
                       )
 
 
-class UserFollowsDeleteView(View, LoginRequiredMixin):
+class UserFollowsDeleteView(LoginRequiredMixin, View):
     def post(self, request, user_followed_relation_id):
         followed = models.UserFollows.objects.get(id=user_followed_relation_id)
         if followed.user == request.user:
@@ -227,7 +236,7 @@ class UserFollowsDeleteView(View, LoginRequiredMixin):
 
 
 # this view is never called, might be good to delete it.
-class UserBlocksView(View, LoginRequiredMixin):
+class UserBlocksView(LoginRequiredMixin, View):
     template_name = 'litrevu/subscription.html'
     form_class = forms.UserBlocksForm
 
@@ -282,7 +291,7 @@ class UserBlocksView(View, LoginRequiredMixin):
                                'follow_form': follow_form, 'block_form': block_form})
 
 
-class UserBlocksDeleteView(View, LoginRequiredMixin):
+class UserBlocksDeleteView(LoginRequiredMixin, View):
     def post(self, request, user_blocked_relation_id):
         blocked = models.UserBlocks.objects.get(id=user_blocked_relation_id)
         if blocked.user == request.user:
@@ -290,7 +299,7 @@ class UserBlocksDeleteView(View, LoginRequiredMixin):
         return redirect('subscription_follow')
 
 
-class PostsView(View, LoginRequiredMixin):
+class PostsView(LoginRequiredMixin, View):
     template_name = 'litrevu/posts.html'
 
     def get(self, request):
