@@ -17,8 +17,12 @@ class Migration(migrations.Migration):
             name='UserBlocks',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('blocked_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='blocked_by', to=settings.AUTH_USER_MODEL)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='blocking', to=settings.AUTH_USER_MODEL)),
+                ('blocked_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                                   related_name='blocked_by',
+                                                   to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                           related_name='blocking',
+                                           to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'unique_together': {('user', 'blocked_user')},

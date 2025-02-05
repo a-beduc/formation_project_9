@@ -29,7 +29,6 @@ class ReviewForm(forms.ModelForm):
         self.fields['body'].widget = forms.Textarea(attrs={'class': 'formReview__body'})
 
 
-
 class UserFollowsForm(forms.Form):
     username = forms.CharField(
         max_length=128,
