@@ -97,7 +97,7 @@ h1, h2, h3, h4, h5, h6 {
   padding:0 2rem;
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: space-between;
   background: $tertiary-color;
   height: $navbar-height;
   position: relative;
@@ -105,13 +105,14 @@ h1, h2, h3, h4, h5, h6 {
   color: $quinary-color;
 
   &__title {
-    margin: 0 auto;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     font-weight: bold;
     font-size: $huge-font-size;
     line-height: 5rem;
+    color: $primary-color;
+    text-shadow: rgba($quinary-color, 0.5) 3px 3px;
+    flex-grow: 1;
+    text-align: center;
+    cursor: pointer;
   }
 
   &__list {
@@ -119,30 +120,29 @@ h1, h2, h3, h4, h5, h6 {
     list-style-type: none;
     align-items: center;
     gap:2rem;
+    flex-grow: 1;
+    justify-content: flex-end;
   }
 
   &__li {
-    transition-property: text-decoration, transform;
-    transition-duration: 0.1s;
+    transition: transform 100ms;
     padding: 2px 0;
   }
 
   &__li:hover {
     padding: 1px 0;
     transform: translateY(-2px);
-    text-decoration: underline;
-    text-decoration-color: $primary-color;
   }
 
   &__link {
     text-decoration: none;
     color: $primary-color;
-    font-weight: 400;
+    font-weight: 600;
     font-size: $medium-font-size;
   }
 
-  &__link:hover {
-    color: lighten($primary-color, 30%);
+  &__link:hover, &__active {
+    color: $quaternary-color;
   }
 }
 
@@ -153,6 +153,7 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
 
   &__top {
     display: flex;
@@ -228,6 +229,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   &__feed {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap:1rem;
@@ -444,13 +446,25 @@ h1, h2, h3, h4, h5, h6 {
 /* style for post.html */
 
 .postBlock {
-  width: 75%;
+  margin-top: 2rem;
+  width: 60%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 3rem;
   padding: 1rem;
+  gap: 3rem;
+
+  &__title {
+    text-align: center;
+  }
+
+  &__feed {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+  }
 }
 
 /* style for ticket_snippet.html */
@@ -796,10 +810,68 @@ h1, h2, h3, h4, h5, h6 {
       cursor: pointer;
     }
   }
+}
+
 .errorlist li, .errorMessage {
   color: red;
   font-style: italic;
   list-style-type: none;
 }
 
+
+.paginator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: $tertiary-color;
+  color: $primary-color;
+  font-size: $small-font-size;
+
+  &__start, &__end {
+    display: flex;
+    gap: 0.5rem;
+
+    &.disabled a {
+      pointer-events: none;
+      cursor: default;
+      background-color: transparent;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+
+  &__middle {
+    margin: 0 1rem;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $tertiary-color;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+  }
+
+  img {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: block;
+    background-color: transparent;
+    filter: invert(95%) sepia(3%) saturate(2131%) hue-rotate(316deg) brightness(99%) contrast(110%);
+  }
+
+  a:hover img {
+    filter: brightness(0) saturate(100%) invert(51%) sepia(68%) saturate(3873%) hue-rotate(351deg) brightness(93%) contrast(113%);
+  }
 }
