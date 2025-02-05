@@ -15,7 +15,7 @@ class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         followed = models.UserFollows.objects.filter(user=request.user).values_list('followed_user')
 
-        excluded = models.UserBlocks.objects.filter(user=request.user).values_list('blocked_user')
+        excluded = models.UserBlocks.objects.filter(user=request.user).values_list('blocked_user', flat=True)
 
         reviews = models.Review.objects.filter(
             Q(user=request.user) |
@@ -25,7 +25,7 @@ class HomeView(LoginRequiredMixin, View):
         )
 
         for review in reviews:
-            if review.user in excluded:
+            if review.user.id in excluded:
                 review.blocked = True
 
         tickets = models.Ticket.objects.filter(
@@ -85,13 +85,9 @@ class TicketDeleteView(LoginRequiredMixin, View):
         ticket = models.Ticket.objects.get(id=ticket_id)
         if ticket.user == request.user:
             ticket.delete()
-            return redirect('home')
-        return redirect('home')
+        # Redirect to the previous page or fallback to 'home'
+        return redirect(self.request.META.get('HTTP_REFERER', 'home'))
 
-
-class ReviewBaseView(LoginRequiredMixin, View):
-    form_class = forms.ReviewForm
-    template_name = ''
 
     def get(self, request, ticket_id):
         ticket = models.Ticket.objects.get(id=ticket_id)
@@ -100,7 +96,9 @@ class ReviewBaseView(LoginRequiredMixin, View):
 
 
 class ReviewCreateView(ReviewBaseView):
+class ReviewCreateView(LoginRequiredMixin, View):
     template_name = 'litrevu/review_create.html'
+    form_class = forms.ReviewForm
 
     def get(self, request, ticket_id):
         ticket = models.Ticket.objects.get(id=ticket_id)
@@ -146,8 +144,8 @@ class ReviewDeleteView(LoginRequiredMixin, View):
 
         if review.user == request.user:
             review.delete()
-            return redirect('home')
-        return redirect('home')
+        # Redirect to the previous page or fallback to 'home'
+        return redirect(self.request.META.get('HTTP_REFERER', 'home'))
 
 
 class TicketReviewCreateView(LoginRequiredMixin, View):
@@ -251,7 +249,7 @@ class UserFollowsDeleteView(LoginRequiredMixin, View):
         followed = models.UserFollows.objects.get(id=user_followed_relation_id)
         if followed.user == request.user:
             followed.delete()
-        return redirect('subscription_follow')
+        return redirect(self.request.META.get("HTTP_REFERER"))
 
 
 class UserBlocksView(LoginRequiredMixin, View):
@@ -325,7 +323,7 @@ class UserBlocksDeleteView(LoginRequiredMixin, View):
         blocked = models.UserBlocks.objects.get(id=user_blocked_relation_id)
         if blocked.user == request.user:
             blocked.delete()
-        return redirect('subscription_follow')
+        return redirect(self.request.META.get('HTTP_REFERER'))
 
 
 class PostsView(LoginRequiredMixin, View):
