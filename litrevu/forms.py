@@ -4,25 +4,45 @@ from . import widgets
 
 
 class TicketForm(forms.ModelForm):
+    """
+    Form used to handle the creation and update of Ticket instances.
+    Includes fields for title, description, and optional image upload.
+    """
     class Meta:
+        """
+        Configuration to link between form and Ticket model, image field is using a custom widget.
+        """
         model = models.Ticket
         fields = ['title', 'description', 'image']
         widgets = {'image': widgets.CustomFileInput(attrs={'class': 'formTicket__hidden'}), }
         labels = {'title': 'Titre* ', 'description': 'Description* ', 'image': 'Image '}
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the form, update the widget attributes for a customized interface
+        """
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs.update({'class': 'formTicket__title'})
         self.fields['description'].widget.attrs.update({'class': 'formTicket__description'})
 
 
 class ReviewForm(forms.ModelForm):
+    """
+    Form used to handle the creation and update of Review instances.
+    Includes fields for headline, body text, and rating.
+    """
     class Meta:
+        """
+        Configuration to link between form and Review model.
+        """
         model = models.Review
         fields = ['headline', 'body', 'rating']
         labels = {'headline': 'Titre* ', 'rating': 'Note* ', 'body': 'Commentaire* '}
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the form, update the widget attributes for a customized interface
+        """
         super().__init__(*args, **kwargs)
         self.fields['headline'].widget.attrs.update({'class': 'formReview__title'})
         self.fields['rating'].widget.attrs.update({'class': 'formReview__hidden'})
@@ -30,6 +50,9 @@ class ReviewForm(forms.ModelForm):
 
 
 class UserFollowsForm(forms.Form):
+    """
+    Form used to handle the creation and deletion of UserFollows model.
+    """
     username = forms.CharField(
         max_length=128,
         label='',
@@ -39,6 +62,9 @@ class UserFollowsForm(forms.Form):
 
 
 class UserBlocksForm(forms.Form):
+    """
+    Form used to handle the creation and deletion of UserBlocks model.
+    """
     username = forms.CharField(
         max_length=128,
         label='',

@@ -5,23 +5,38 @@ from . import utils
 
 
 class Ticket(models.Model):
+    """
+    Represents a ticket created by a user, containing a title, a description, an optonal image, and a timestamp for
+    creation.
+    """
     title = models.CharField(max_length=128)
     description = models.TextField(max_length=2048, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField(null=True, blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
 
-    # __str__ added to improve admin ui
     def __str__(self):
+        """Return a string representation of the ticket."""
         return f'{self.id} {self.title}'
 
     def save(self, *args, **kwargs):
+        """
+        Save the ticket instance to the database.
+        If an image is provided, it is resized before saving.
+        :param args:
+        :param kwargs:
+        :return: None
+        """
         if self.image:
             utils.image_resize(self.image, 300, 300)
         super().save(*args, **kwargs)
 
 
 class Review(models.Model):
+    """
+    Represents a review associated with a ticket. Each review includes a rating, a headline, an optional body text, and
+    a timestamp for creation.
+    """
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(
         # validates that rating must be between 0 and 5
@@ -34,6 +49,9 @@ class Review(models.Model):
 
 
 class UserFollows(models.Model):
+    """
+    Represents the relationship where a user is following another user.
+    """
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='following')
     followed_user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                       related_name='followed_by')
@@ -45,9 +63,14 @@ class UserFollows(models.Model):
 
 
 class UserBlocks(models.Model):
+    """
+    Represents the relationship where a user is blocking another user.
+    """
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blocking')
     blocked_user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                      related_name='blocked_by')
 
     class Meta:
+        # ensures we don't get multiple UserBlocks instances
+        # for unique user-user_blocked pairs
         unique_together = ('user', 'blocked_user',)

@@ -1,3 +1,5 @@
+<!--  This input handles a user's file upload for image. We hide the default input and interact with it thanks to a js
+ script -->
 <input
         type="file"
         accept="image/"
@@ -9,6 +11,7 @@
     </button>
 
     {% if widget.value %}
+        <!-- checkbox for removing the current file, it is hidden and interacted with thanks to a js script -->
         <input
                 type="checkbox"
                 name="{{ widget.checkbox_name }}"
