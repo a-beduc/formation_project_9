@@ -8,6 +8,13 @@
                 {{ follow_form.as_p }}
                 <button type="submit" role="button" class="newRelationBlock__button">Envoyer</button>
             </form>
+            {% if messages %}
+                {% for message in messages %}
+                    {% if 'follow_message' in  message.extra_tags %}
+                        <p class="errorMessage">{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
         <div class="relationBlock">
             <h2 class="relationBlock__title">Abonnements</h2>
@@ -52,6 +59,13 @@
                 {{ block_form.as_p }}
                 <button type="submit" role="button" class="newRelationBlock__button">Bloquer</button>
             </form>
+            {% if messages %}
+                {% for message in messages %}
+                    {% if 'block_message' in  message.extra_tags %}
+                        <p class="errorMessage">{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
         <div class="relationBlock">
             <h2 class="relationBlock__title">Utilisateurs blockés</h2>

@@ -15,11 +15,9 @@
                     {{ form.as_p }}
                     <button role="button" type="submit" class="loginBlock__button">Se connecter</button>
                     {% if messages %}
-                        <ul>
-                            {% for message in messages %}
-                                <li>{{ message }}</li>
-                            {% endfor %}
-                        </ul>
+                        {% for message in messages %}
+                            <p class="errorMessage">{{ message }}</p>
+                        {% endfor %}
                     {% endif %}
                 </form>
             </div>

@@ -219,15 +219,18 @@ class UserFollowsView(LoginRequiredMixin, View):
                     user=user_to_follow, blocked_user=request.user
                 )
 
-                if (not blocked_by_user.exists() and
-                        not blocked_by_user_to_follow.exists() and
-                        not already_followed.exists() and
-                        request.user.id != user_to_follow.id):
+                if already_followed.exists():
+                    messages.error(request, message=f"Vous êtes déjà abonné à {username_to_follow}.", extra_tags="follow_message")
+                elif blocked_by_user.exists() or blocked_by_user_to_follow.exists():
+                    messages.error(request, message=f"Impossible de suivre {username_to_follow}.", extra_tags="follow_message")
+                elif request.user.id == user_to_follow.id:
+                    messages.error(request, message=f"Vous ne pouvez pas vous suivre vous-même.", extra_tags="follow_message")
+                else:
                     new_follow = models.UserFollows.objects.create(user=request.user, followed_user=user_to_follow)
                     new_follow.save()
 
             except User.DoesNotExist:
-                pass
+                messages.error(request, f"L'utilisateur '{username_to_follow}' n'existe pas.", extra_tags='follow_message')
 
         return render(request, self.template_name,
                       context={'followed': followed, 'following': following, 'follow_form': follow_form,
@@ -275,7 +278,12 @@ class UserBlocksView(LoginRequiredMixin, View):
                 user_to_block = User.objects.get(username=username_to_block)
                 already_blocked = models.UserBlocks.objects.filter(
                     user=request.user, blocked_user=user_to_block)
-                if not already_blocked.exists() and request.user.id != user_to_block.id:
+
+                if already_blocked.exists():
+                    messages.error(request, message=f"Vous avez déjà bloqué {username_to_block}.", extra_tags="block_message")
+                elif request.user.id == user_to_block.id:
+                    messages.error(request, message="Vous ne pouvez pas vous bloquer vous-même", extra_tags="block_message")
+                else:
                     block = models.UserBlocks.objects.create(user=request.user, blocked_user=user_to_block)
 
                     followed_by_user = models.UserFollows.objects.filter(
@@ -291,7 +299,7 @@ class UserBlocksView(LoginRequiredMixin, View):
                     block.save()
 
             except User.DoesNotExist:
-                pass
+                messages.error(request, f"L'utilisateur '{username_to_block}' n'existe pas.", extra_tags='block_message')
 
         return render(request, self.template_name,
                       context={'followed': followed, 'following': following, 'blocked': blocked,

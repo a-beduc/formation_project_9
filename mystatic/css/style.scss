@@ -796,5 +796,10 @@ h1, h2, h3, h4, h5, h6 {
       cursor: pointer;
     }
   }
+.errorlist li, .errorMessage {
+  color: red;
+  font-style: italic;
+  list-style-type: none;
+}
 
 }
