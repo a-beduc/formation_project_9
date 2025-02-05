@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 from django.db import models
+from . import utils
 
 
 class Ticket(models.Model):
@@ -13,6 +14,11 @@ class Ticket(models.Model):
     # __str__ added to improve admin ui
     def __str__(self):
         return f'{self.id} {self.title}'
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            utils.image_resize(self.image, 300, 300)
+        super().save(*args, **kwargs)
 
 
 class Review(models.Model):
