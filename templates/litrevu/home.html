@@ -22,18 +22,14 @@
             </button>
         </div>
         <div class="homeBlock__feed">
-            {% for post in posts %}
-                {% if post|model_type == 'Ticket' %}
-                    <div>
-                        {% include 'litrevu/snippet_ticket.html' with ticket=post %}
-                    </div>
-                    
-                {% elif post|model_type == 'Review' %}
-                    <div>
-                        {% include 'litrevu/snippet_review.html' with blocked=post.blocked review=post %}
-                    </div>
+            {% for instance in page_obj %}
+                {% if instance|model_type == 'Ticket' %}
+                    {% include 'litrevu/snippet_ticket.html' with ticket=instance %}
+                {% elif instance|model_type == 'Review' %}
+                    {% include 'litrevu/snippet_review.html' with blocked=instance.blocked review=instance %}
                 {% endif %}
             {% endfor %}
         </div>
     </div>
+    {% include "litrevu/paginator_snippet.html" with page_obj=page_obj %}
 {% endblock content %}

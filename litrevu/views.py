@@ -1,10 +1,12 @@
 from django.shortcuts import redirect, render
 from . import forms, models
 from myauth.models import User
-from django.db.models import CharField, Value, Q
+from django.db.models import Q
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from itertools import chain
+from django.contrib import messages
+from django.core.paginator import Paginator
 
 
 class HomeView(LoginRequiredMixin, View):
@@ -32,7 +34,13 @@ class HomeView(LoginRequiredMixin, View):
         )
 
         posts = sorted(chain(reviews, tickets), key=lambda post: post.time_created, reverse=True)
-        return render(request, self.template_name, context={'posts': posts})
+
+        paginator = Paginator(posts, 4)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context = {'page_obj': page_obj}
+
+        return render(request, self.template_name, context=context)
 
 
 class TicketCreateView(LoginRequiredMixin, View):
@@ -235,7 +243,6 @@ class UserFollowsDeleteView(LoginRequiredMixin, View):
         return redirect('subscription_follow')
 
 
-# this view is never called, might be good to delete it.
 class UserBlocksView(LoginRequiredMixin, View):
     template_name = 'litrevu/subscription.html'
     form_class = forms.UserBlocksForm
@@ -306,4 +313,10 @@ class PostsView(LoginRequiredMixin, View):
         reviews = models.Review.objects.filter(user=request.user)
         tickets = models.Ticket.objects.filter(user=request.user)
         posts = sorted(chain(reviews, tickets), key=lambda post: post.time_created, reverse=True)
-        return render(request, self.template_name, context={'posts': posts})
+
+        paginator = Paginator(posts, 4)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context = {'page_obj': page_obj}
+
+        return render(request, self.template_name, context=context)
