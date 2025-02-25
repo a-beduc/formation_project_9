@@ -1,4 +1,6 @@
-
+/**
+ * Script to manage image upload through a custom button.
+ */
 document.addEventListener("DOMContentLoaded", () => {
     const fileInput = document.querySelector(".formTicket__hidden");
     const customButton = document.querySelector(".formTicket__customBlock__upload");
@@ -6,13 +8,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const checkbox = document.querySelector('.formTicket__checkbox');
     const deleteButton = document.querySelector(".formTicket__customBlock__delete");
 
+    /**
+     * When user clicks the "custom" button. Trigger a click on the hidden file input.
+     */
     customButton.addEventListener("click", () => {
         fileInput.click();
-        if (checkbox) {
-            checkbox.checked = false;
-        }
     })
 
+    /**
+     * Display the name of the file selected before upload.
+     */
     fileInput.addEventListener("change", () => {
         if (fileName) {
             fileName.style.display = "inline-block";
@@ -24,6 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    /**
+     * Check the hidden checkbox when clicking on the custom delete button.
+     */
     if (deleteButton) {
         deleteButton.addEventListener("click", () => {
             if (checkbox) {
@@ -35,4 +43,3 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     }
 })
-
