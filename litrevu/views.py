@@ -80,7 +80,7 @@ class TicketCreateView(LoginRequiredMixin, View):
     def post(self, request):
         """
         Handle POST requests. Validate and create a new Ticket. If valid, redirects to the home page;
-        otherwise, redisplays the form
+        otherwise, displays the form
 
         :param request: An HttpRequest object containing form data.
         :return: An HttpResponse redirect to 'home' on success or re-renders form on invalid submission.
@@ -103,7 +103,7 @@ class TicketUpdateView(LoginRequiredMixin, View):
 
     def get(self, request, ticket_id):
         """
-        Handle GET requests. Render the update form for the specifid ticket.
+        Handle GET requests. Render the update form for the specified ticket.
 
         :param request: an HttpRequest object.
         :param ticket_id: The primary key (id) of the ticket to update.
@@ -134,6 +134,7 @@ class TicketDeleteView(LoginRequiredMixin, View):
     """
     View to handle deletion of a user's ticket.
     """
+
     def post(self, request, ticket_id):
         """
         Handle POST requests. Delete the specified ticket.
@@ -175,6 +176,7 @@ class ReviewCreateView(LoginRequiredMixin, View):
         :return: HttpResponse redirect to 'home' or re-render a populated Review Form on invalid submission.
         """
         ticket = models.Ticket.objects.get(id=ticket_id)
+        ticket.user_has_reviewed = ticket.review_set.filter(user=request.user).exists()
         form = self.form_class(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
@@ -227,6 +229,7 @@ class ReviewDeleteView(LoginRequiredMixin, View):
     """
     View handling the deletion of a user's review.
     """
+
     def post(self, request, review_id):
         """
         Handle POST requests. Redirect to the previous page on deletion.
@@ -284,169 +287,216 @@ class TicketReviewCreateView(LoginRequiredMixin, View):
         return render(request, self.template_name, context={'ticket_form': ticket_form, 'review_form': review_form})
 
 
-class UserFollowsView(LoginRequiredMixin, View):
+class BaseRelationView(LoginRequiredMixin, View):
     """
-    View for managing the user's following relationships. Users can see who they follow, who follow them and who they
-    blocked.
+    Basic view for creating Follower/Followed and Blocker/Blocked relations for the 'litrevu/subscription.html'
+    template.
     """
     template_name = 'litrevu/subscription.html'
-    form_class = forms.UserFollowsForm
+    form_class_follow = forms.UserFollowsForm
+    form_class_block = forms.UserBlocksForm
+
+    def get_context_data(self, request, follow_form=None, block_form=None):
+        """
+        Get the context for the subscription template, if not specified send empty follow and block forms
+        :param request: An HttpRequest object.
+        :param follow_form: An instance of forms.UserFollowsForm.
+        :param block_form: An instance of forms.UserBlocksForm.
+        :return: A dictionary of context variables.
+        """
+        followed = models.UserFollows.objects.filter(user=request.user).select_related('followed_user')
+        following = models.UserFollows.objects.filter(followed_user=request.user).select_related('user')
+        blocked = models.UserBlocks.objects.filter(user=request.user).select_related('blocked_user')
+        if not follow_form:
+            follow_form = self.form_class_follow()
+        if not block_form:
+            block_form = self.form_class_block()
+        return {
+            'followed': followed,
+            'following': following,
+            'blocked': blocked,
+            'follow_form': follow_form,
+            'block_form': block_form
+        }
 
     def get(self, request):
         """
         Handle GET requests. Render the subscription page, displaying the user's follow and block relationships.
         :param request: An HttpRequest object.
-        :return: HttpResponse with follow/block relationships and forms for following and blocking users.
+        :return: HttpResponse with follow/block relations and forms for following and blocking users.
         """
-        followed = models.UserFollows.objects.filter(user=request.user).select_related('followed_user')
-        following = models.UserFollows.objects.filter(followed_user=request.user).select_related('user')
-        blocked = models.UserBlocks.objects.filter(user=request.user).select_related('blocked_user')
+        context = self.get_context_data(request)
+        return render(request, self.template_name, context=context)
 
-        block_form = forms.UserBlocksForm()
+    def handle_relation(self, username):
+        raise NotImplementedError("handle_relation must be implemented in subclass")
 
-        follow_form = self.form_class()
-        return render(request, self.template_name,
-                      context={'followed': followed, 'following': following, 'follow_form': follow_form,
-                               'blocked': blocked, 'block_form': block_form}
-                      )
 
+class FollowView(BaseRelationView):
+    """
+    View for creating a relation of follower/followed between two users
+    """
     def post(self, request):
-        followed = models.UserFollows.objects.filter(user=request.user).select_related('followed_user')
-        following = models.UserFollows.objects.filter(followed_user=request.user).select_related('user')
-        blocked = models.UserBlocks.objects.filter(user=request.user).select_related('blocked_user')
-
-        block_form = forms.UserBlocksForm()
-
-        follow_form = self.form_class(request.POST)
+        """
+        Handle POST requests. Follow the specified user.
+        :param request: An HttpRequest object.
+        :return: HttpResponse redirect to 'litrevu/subscription.html' template
+        """
+        follow_form = self.form_class_follow(request.POST)
         if follow_form.is_valid():
             username_to_follow = follow_form.cleaned_data['username']
+            self.handle_relation(username_to_follow)
 
-            try:
-                user_to_follow = User.objects.get(username=username_to_follow)
-                already_followed = models.UserFollows.objects.filter(
-                    user=request.user, followed_user=user_to_follow)
+        context = self.get_context_data(request, follow_form=follow_form)
+        return render(request, self.template_name, context=context)
 
-                blocked_by_user = models.UserBlocks.objects.filter(
-                    user=request.user, blocked_user=user_to_follow
-                )
+    def handle_relation(self, username_to_follow):
+        """
+        Verify several conditions before creating a follower/followed relation between two users.
+        Display error messages when the criteria are not met.
+        """
+        try:
+            user_to_follow = User.objects.get(username=username_to_follow)
+            already_followed = models.UserFollows.objects.filter(
+                user=self.request.user, followed_user=user_to_follow)
 
-                blocked_by_user_to_follow = models.UserBlocks.objects.filter(
-                    user=user_to_follow, blocked_user=request.user
-                )
+            blocked_by_user = models.UserBlocks.objects.filter(
+                user=self.request.user, blocked_user=user_to_follow
+            )
 
-                if already_followed.exists():
-                    messages.error(request,
-                                   message=f"Vous êtes déjà abonné à {username_to_follow}.",
-                                   extra_tags="follow_message")
-                elif blocked_by_user.exists() or blocked_by_user_to_follow.exists():
-                    messages.error(request,
-                                   message=f"Impossible de suivre {username_to_follow}.",
-                                   extra_tags="follow_message")
-                elif request.user.id == user_to_follow.id:
-                    messages.error(request,
-                                   message="Vous ne pouvez pas vous suivre vous-même.",
-                                   extra_tags="follow_message")
-                else:
-                    new_follow = models.UserFollows.objects.create(user=request.user, followed_user=user_to_follow)
-                    new_follow.save()
+            blocked_by_user_to_follow = models.UserBlocks.objects.filter(
+                user=user_to_follow, blocked_user=self.request.user
+            )
 
-            except User.DoesNotExist:
-                messages.error(request,
-                               message=f"L'utilisateur '{username_to_follow}' n'existe pas.",
-                               extra_tags='follow_message')
+            # verify several conditions before creating the follow relationship
+            if already_followed.exists():
+                messages.error(self.request,
+                               message=f"Vous êtes déjà abonné à {username_to_follow}.",
+                               extra_tags="follow_message")
+            elif blocked_by_user.exists() or blocked_by_user_to_follow.exists():
+                messages.error(self.request,
+                               message=f"Impossible de suivre {username_to_follow}.",
+                               extra_tags="follow_message")
+            elif self.request.user.id == user_to_follow.id:
+                messages.error(self.request,
+                               message="Vous ne pouvez pas vous suivre vous-même.",
+                               extra_tags="follow_message")
+            else:
+                new_follow = models.UserFollows.objects.create(user=self.request.user,
+                                                               followed_user=user_to_follow)
+                new_follow.save()
 
-        return render(request, self.template_name,
-                      context={'followed': followed, 'following': following, 'follow_form': follow_form,
-                               'blocked': blocked, 'block_form': block_form}
-                      )
-
-
-class UserFollowsDeleteView(LoginRequiredMixin, View):
-    def post(self, request, user_followed_relation_id):
-        followed = models.UserFollows.objects.get(id=user_followed_relation_id)
-        if followed.user == request.user:
-            followed.delete()
-        return redirect(self.request.META.get("HTTP_REFERER"))
+        except User.DoesNotExist:
+            messages.error(self.request,
+                           message=f"L'utilisateur '{username_to_follow}' n'existe pas.",
+                           extra_tags='follow_message')
 
 
-class UserBlocksView(LoginRequiredMixin, View):
-    template_name = 'litrevu/subscription.html'
-    form_class = forms.UserBlocksForm
-
-    def get(self, request):
-        followed = models.UserFollows.objects.filter(user=request.user).select_related('followed_user')
-        following = models.UserFollows.objects.filter(followed_user=request.user).select_related('user')
-        blocked = models.UserBlocks.objects.filter(user=request.user).select_related('blocked_user')
-
-        follow_form = forms.UserFollowsForm()
-        block_form = self.form_class()
-
-        return render(request, self.template_name,
-                      context={'followed': followed, 'following': following, 'blocked': blocked,
-                               'follow_form': follow_form, 'block_form': block_form}
-                      )
-
+class BlockView(BaseRelationView):
+    """
+    View for creating a relation of blocker/blocked between two users
+    """
     def post(self, request):
-        followed = models.UserFollows.objects.filter(user=request.user).select_related('followed_user')
-        following = models.UserFollows.objects.filter(followed_user=request.user).select_related('user')
-        blocked = models.UserBlocks.objects.filter(user=request.user).select_related('blocked_user')
-
-        follow_form = forms.UserFollowsForm()
-
-        block_form = self.form_class(request.POST)
+        """
+        Handle POST requests. Block the specified user.
+        :param request: An HttpRequest object.
+        :return: HttpResponse redirect to 'litrevu/subscription.html' template
+        """
+        block_form = self.form_class_block(request.POST)
         if block_form.is_valid():
             username_to_block = block_form.cleaned_data['username']
+            self.handle_relation(username_to_block)
 
-            try:
-                user_to_block = User.objects.get(username=username_to_block)
-                already_blocked = models.UserBlocks.objects.filter(
-                    user=request.user, blocked_user=user_to_block)
+        context = self.get_context_data(request, block_form=block_form)
+        return render(request, self.template_name, context=context)
 
-                if already_blocked.exists():
-                    messages.error(request,
-                                   message=f"Vous avez déjà bloqué {username_to_block}.",
-                                   extra_tags="block_message")
-                elif request.user.id == user_to_block.id:
-                    messages.error(request,
-                                   message="Vous ne pouvez pas vous bloquer vous-même",
-                                   extra_tags="block_message")
-                else:
-                    block = models.UserBlocks.objects.create(user=request.user, blocked_user=user_to_block)
+    def handle_relation(self, username_to_block):
+        """
+        Verify several conditions before creating a blocker/blocked relation between two users.
+        Display error messages when the criteria are not met.
+        """
+        try:
+            user_to_block = User.objects.get(username=username_to_block)
+            already_blocked = models.UserBlocks.objects.filter(
+                user=self.request.user, blocked_user=user_to_block)
 
-                    followed_by_user = models.UserFollows.objects.filter(
-                        user=request.user, followed_user=user_to_block)
-                    if followed_by_user.exists():
-                        followed_by_user.delete()
+            if already_blocked.exists():
+                messages.error(self.request,
+                               message=f"Vous avez déjà bloqué {username_to_block}.",
+                               extra_tags="block_message")
+            elif self.request.user.id == user_to_block.id:
+                messages.error(self.request,
+                               message="Vous ne pouvez pas vous bloquer vous-même",
+                               extra_tags="block_message")
+            else:
+                block = models.UserBlocks.objects.create(user=self.request.user, blocked_user=user_to_block)
 
-                    followed_by_user_to_block = models.UserFollows.objects.filter(
-                        user=user_to_block, followed_user=request.user)
-                    if followed_by_user_to_block.exists():
-                        followed_by_user_to_block.delete()
+                followed_by_user = models.UserFollows.objects.filter(
+                    user=self.request.user, followed_user=user_to_block)
+                if followed_by_user.exists():
+                    followed_by_user.delete()
 
-                    block.save()
+                followed_by_user_to_block = models.UserFollows.objects.filter(
+                    user=user_to_block, followed_user=self.request.user)
+                if followed_by_user_to_block.exists():
+                    followed_by_user_to_block.delete()
 
-            except User.DoesNotExist:
-                messages.error(request,
-                               message=f"L'utilisateur '{username_to_block}' n'existe pas.",
-                               extra_tags='block_message')
+                block.save()
 
-        return render(request, self.template_name,
-                      context={'followed': followed, 'following': following, 'blocked': blocked,
-                               'follow_form': follow_form, 'block_form': block_form})
+        except User.DoesNotExist:
+            messages.error(self.request,
+                           message=f"L'utilisateur '{username_to_block}' n'existe pas.",
+                           extra_tags='block_message')
 
 
-class UserBlocksDeleteView(LoginRequiredMixin, View):
-    def post(self, request, user_blocked_relation_id):
-        blocked = models.UserBlocks.objects.get(id=user_blocked_relation_id)
-        if blocked.user == request.user:
-            blocked.delete()
-        return redirect(self.request.META.get('HTTP_REFERER'))
+class BaseDeleteView(LoginRequiredMixin, View):
+    """
+    Basic view for deleting Follower/Followed and Blocker/Blocked relations refresh page after being called
+    """
+    def post(self, request, relation_id):
+        """
+        Handle POST requests. Delete follower/followed or blocker relation.
+        :param request: An HttpRequest object.
+        :param relation_id: The id of the relation to delete.
+        :return: HttpResponse refresh the current page
+        """
+        selected_relation = self.get_relation_from_id(relation_id)
+        if selected_relation.user == request.user:
+            selected_relation.delete()
+        return redirect(self.request.META.get("HTTP_REFERER"))
+
+    def get_relation_from_id(self, relation_id):
+        raise NotImplementedError("get_relation_from_id must be implemented in subclass")
+
+
+class FollowDeleteView(BaseDeleteView):
+    """
+    View for deleting Follower/Followed relations refresh page after being called
+    """
+    def get_relation_from_id(self, relation_id):
+        return models.UserFollows.objects.get(id=relation_id)
+
+
+class BlockDeleteView(BaseDeleteView):
+    """
+    View for deleting Follower/Followed relations refresh page after being called
+    """
+    def get_relation_from_id(self, relation_id):
+        return models.UserBlocks.objects.get(id=relation_id)
 
 
 class PostsView(LoginRequiredMixin, View):
+    """
+    View for displaying all posts made by the user.
+    """
     template_name = 'litrevu/posts.html'
 
     def get(self, request):
+        """
+        Handle GET requests. Display all posts made by the user.
+        :param request: An HttpRequest object.
+        :return: HttpResponse redirect to 'litrevu/posts.html' template
+        """
         reviews = models.Review.objects.filter(user=request.user)
         tickets = models.Ticket.objects.filter(user=request.user)
         for ticket in tickets:
