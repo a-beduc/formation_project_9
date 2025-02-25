@@ -63,14 +63,36 @@ Ensure you have the following installed on your system:
     ```bash
     pip install -r requirements.txt
     ```
-6. Apply migrations:
-Make sure you are in the project's root directory
+6. (Optional) If you want a new Database, 
+   - Delete the current data
+     - Delete the db.sqlite3 in the root directory
+     - Delete the files found in /media
 
-    ```bash
-    python manage.py makemigrations
-    python manage.py migrate
-    ```
-7. Run the server:
+   - Apply migrations
+     - Make sure you are in the project's root directory
+
+         ```bash
+         python manage.py migrate
+         ```
+   
+   - Create an admin user to access the Admin panel.
+       ```bash
+       python manage.py createsuperuser
+     
+       Username: <Your choice>
+       Emailaddress: example@gmail.com
+       Password: ******
+       Password(again): ******
+       ```
+
+7. Generate a SECRET_KEY:
+   * Create a .env file at the root of the project by copying the content .env.example 
+   * Go to https://djecrety.ir/ to generate a Django SECRET_KEY 
+   * Paste the generated key as a string in the .env
+   * It should look like : SECRET_KEY='your_unique_generated_secret_key'
+
+
+8. Run the server:
 
     ```bash
     python manage.py runserver
