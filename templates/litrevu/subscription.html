@@ -1,12 +1,12 @@
-{%  extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
     <div class="subscriptionPage">
         <div class="newRelationBlock">
             <h2 class="newRelationBlock__title">Suivre d'autres utilisateurs</h2>
-            <form method="POST" action="{% url 'subscription_follow' %}" class="newRelationBlock__form">
+            <form method="POST" action="{% url 'follow' %}" class="newRelationBlock__form">
                 {% csrf_token %}
                 {{ follow_form.as_p }}
-                <button type="submit" role="button" class="newRelationBlock__button">Envoyer</button>
+                <button name="follow_submit" type="submit" role="button" class="newRelationBlock__button">Envoyer</button>
             </form>
             {% if messages %}
                 {% for message in messages %}
@@ -26,10 +26,11 @@
                     </td>
                     <td class="relationBlock__td relationBlock__td--button">
                         <form method="post" 
-                              action="{% url 'subscription_follow_delete' follow.id %}"
+                              action="{% url 'follow_delete' follow.id %}"
                               class="relationBlock__form">
                             {% csrf_token %}
-                            <button role="button" 
+                            <button name="follow_delete_submit"
+                                    role="button"
                                     type="submit"
                                     class="relationBlock__button">
                             Se désabonner
@@ -54,10 +55,10 @@
         </div>
         <div class="newRelationBlock">
             <h2 class="newRelationBlock__title">Blocker d'autres utilisateurs</h2>
-            <form method="POST" action="{% url 'subscription_block' %}"  class="newRelationBlock__form">
+            <form method="POST" action="{% url 'block' %}"  class="newRelationBlock__form">
                 {% csrf_token %}
                 {{ block_form.as_p }}
-                <button type="submit" role="button" class="newRelationBlock__button">Bloquer</button>
+                <button name="block_submit" type="submit" role="button" class="newRelationBlock__button">Bloquer</button>
             </form>
             {% if messages %}
                 {% for message in messages %}
@@ -77,10 +78,11 @@
                     </td>
                     <td class="relationBlock__td relationBlock__td--button">
                         <form method="post" 
-                              action="{% url 'subscription_block_delete' block.id %}"
+                              action="{% url 'block_delete' block.id %}"
                               class="relationBlock__form">
                             {% csrf_token %}
-                            <button role="button" 
+                            <button name="block_delete_submit"
+                                    role="button"
                                     type="submit"
                                     class="relationBlock__button">
                             Débloquer

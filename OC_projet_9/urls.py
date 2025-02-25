@@ -35,12 +35,12 @@ urlpatterns = [
     path('review/update/<int:review_id>/', litrevu.views.ReviewUpdateView.as_view(), name='review_update'),
     path('review/delete/<int:review_id>/', litrevu.views.ReviewDeleteView.as_view(), name='review_delete'),
     path('ticket_review/create/', litrevu.views.TicketReviewCreateView.as_view(), name='ticket_review_create'),
-    path('subscription/follow/', litrevu.views.UserFollowsView.as_view(), name='subscription_follow'),
-    path('subscription/follow/delete/<int:user_followed_relation_id>/',
-         litrevu.views.UserFollowsDeleteView.as_view(), name='subscription_follow_delete'),
-    path('subscription/block/', litrevu.views.UserBlocksView.as_view(), name='subscription_block'),
-    path('subscription/block/delete/<int:user_blocked_relation_id>/',
-         litrevu.views.UserBlocksDeleteView.as_view(), name='subscription_block_delete'),
+    path('subscription/follow/', litrevu.views.FollowView.as_view(), name='follow'),
+    path('subscription/follow/delete/<int:relation_id>/',
+         litrevu.views.FollowDeleteView.as_view(), name='follow_delete'),
+    path('subscription/block/', litrevu.views.BlockView.as_view(), name='block'),
+    path('subscription/block/delete/<int:relation_id>/',
+         litrevu.views.BlockDeleteView.as_view(), name='block_delete'),
     path('posts/', litrevu.views.PostsView.as_view(), name='posts'),
 ]
 

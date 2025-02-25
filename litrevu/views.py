@@ -46,6 +46,10 @@ class HomeView(LoginRequiredMixin, View):
             Q(user=request.user) |
             Q(user__in=followed)
         )
+        for ticket in tickets:
+            # user_has_reviewed is used in the litrevu/ticket_snippet.html template to show/hide the
+            # "Créer une critique" button
+            ticket.user_has_reviewed = ticket.review_set.filter(user=request.user).exists()
 
         posts = sorted(chain(reviews, tickets), key=lambda post: post.time_created, reverse=True)
 
@@ -159,6 +163,7 @@ class ReviewCreateView(LoginRequiredMixin, View):
         :return: HttpResponse with a blank Review Form.
         """
         ticket = models.Ticket.objects.get(id=ticket_id)
+        ticket.user_has_reviewed = ticket.review_set.filter(user=request.user).exists()
         form = self.form_class()
         return render(request, self.template_name, context={'form': form, 'ticket': ticket})
 
@@ -196,6 +201,7 @@ class ReviewUpdateView(LoginRequiredMixin, View):
         """
         review = models.Review.objects.get(id=review_id)
         ticket = models.Ticket.objects.get(id=review.ticket.id)
+        ticket.user_has_reviewed = ticket.review_set.filter(user=request.user).exists()
         form = self.form_class(instance=review)
         return render(request, self.template_name, context={'form': form, 'ticket': ticket, 'review': review})
 
@@ -208,6 +214,7 @@ class ReviewUpdateView(LoginRequiredMixin, View):
         """
         review = models.Review.objects.get(id=review_id)
         ticket = models.Ticket.objects.get(id=review.ticket.id)
+        ticket.user_has_reviewed = ticket.review_set.filter(user=request.user).exists()
         form = self.form_class(request.POST, instance=review)
         if form.is_valid():
             review = form.save(commit=False)
@@ -442,6 +449,8 @@ class PostsView(LoginRequiredMixin, View):
     def get(self, request):
         reviews = models.Review.objects.filter(user=request.user)
         tickets = models.Ticket.objects.filter(user=request.user)
+        for ticket in tickets:
+            ticket.user_has_reviewed = ticket.review_set.filter(user=request.user).exists()
         posts = sorted(chain(reviews, tickets), key=lambda post: post.time_created, reverse=True)
 
         paginator = Paginator(posts, 4)
