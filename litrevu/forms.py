@@ -44,9 +44,19 @@ class ReviewForm(forms.ModelForm):
         Initialize the form, update the widget attributes for a customized interface
         """
         super().__init__(*args, **kwargs)
+        self.fields['rating'].initial = 0
         self.fields['headline'].widget.attrs.update({'class': 'formReview__title'})
         self.fields['rating'].widget.attrs.update({'class': 'formReview__hidden'})
         self.fields['body'].widget = forms.Textarea(attrs={'class': 'formReview__body'})
+
+    def clean_rating(self):
+        """
+        If rating fields hasn't been interacted with, send a 0 to the model.
+        """
+        rating = self.cleaned_data.get('rating')
+        if rating in (None, ''):
+            rating = 0
+        return rating
 
 
 class UserFollowsForm(forms.Form):
