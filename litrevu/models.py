@@ -6,18 +6,17 @@ from . import utils
 
 class Ticket(models.Model):
     """
-    Represents a ticket created by a user, containing a title, a description, an optonal image, and a timestamp for
+    Represents a ticket created by a user, containing a title, a description, an optional image, and a timestamp for
     creation.
     """
     title = models.CharField(max_length=128)
-    description = models.TextField(max_length=2048, blank=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    image = models.ImageField(null=True, blank=True)
+    description = models.TextField(max_length=2048,
+                                   blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    image = models.ImageField(null=True,
+                              blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        """Return a string representation of the ticket."""
-        return f'{self.id} {self.title}'
 
     def save(self, *args, **kwargs):
         """
@@ -28,7 +27,9 @@ class Ticket(models.Model):
         :return: None
         """
         if self.image:
-            utils.image_resize(self.image, 300, 300)
+            utils.image_resize(self.image,
+                               width=300,
+                               height=300)
         super().save(*args, **kwargs)
 
 
@@ -57,8 +58,11 @@ class UserFollows(models.Model):
     """
     Represents the relationship where a user is following another user.
     """
-    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='following')
-    followed_user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE,
+                             related_name='following')
+    followed_user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
+                                      on_delete=models.CASCADE,
                                       related_name='followed_by')
 
     class Meta:
@@ -71,8 +75,11 @@ class UserBlocks(models.Model):
     """
     Represents the relationship where a user is blocking another user.
     """
-    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blocking')
-    blocked_user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE,
+                             related_name='blocking')
+    blocked_user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
+                                     on_delete=models.CASCADE,
                                      related_name='blocked_by')
 
     class Meta:
