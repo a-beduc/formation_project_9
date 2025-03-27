@@ -1,9 +1,5 @@
 from django.contrib import admin
-
 from litrevu.models import Ticket, Review, UserFollows, UserBlocks
-
-
-
 
 
 admin.site.register(Ticket)

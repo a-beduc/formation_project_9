@@ -4,17 +4,23 @@
 {% block content %}
     <div class="homeBlock">
         <div class="homeBlock__top">
-            <button type="button" role="button" onclick=location.href="{% url 'ticket_create' %}"; 
+            <button type="button" role="button"
+                    onclick=location.href="{% url 'ticket_create' %}";
                     class="homeBlock__top__button">
-                <span>Demander une critique</span>
+                <span>
+                    Demander une critique
+                </span>
                 <svg width="15px" height="10px" viewBox="0 0 13 10">
                     <path d="M1,5 L11,5"></path>
                     <polyline points="8 1 12 5 8 9"></polyline>
                 </svg>
             </button>
-            <button type="button" role="button" onclick=location.href="{% url 'ticket_review_create' %}";
+            <button type="button" role="button"
+                    onclick=location.href="{% url 'ticket_review_create' %}";
                     class="homeBlock__top__button">
-                <span>Créer une critique</span>
+                <span>
+                    Créer une critique
+                </span>
                 <svg width="15px" height="10px" viewBox="0 0 13 10">
                     <path d="M1,5 L11,5"></path>
                     <polyline points="8 1 12 5 8 9"></polyline>

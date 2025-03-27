@@ -15,13 +15,10 @@ images_types = {
 
 def image_resize(image, width, height):
     """
-    Resize a given image to fit within the specified width and height, maintaining aspect ratio.
-    If the image is larger than the specified width or height, it will be resized to fit within the specified
+    Resize a given image to fit within the specified width and height,
+    maintaining aspect ratio. If the image is larger than the specified
+    width or height, it will be resized to fit within the specified
     width and height; otherwise no resize occurs.
-    :param image: The image to be resized.
-    :param width: The maximum width allowed for the resized image.
-    :param height: The maximum height allowed for the resized image.
-    :return:
     """
     img = Image.open(image)
 

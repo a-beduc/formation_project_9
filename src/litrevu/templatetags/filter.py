@@ -8,7 +8,8 @@ register = template.Library()
 @register.filter(name='star_rating')
 def star_rating(value):
     """
-    Convert a numerical rating into a series of star icons (max of 5), returning the result as safe HTML.
+    Convert a numerical rating into a series of star icons (max of 5),
+    returning the result as safe HTML.
 
     :param value: An integer
     :return: An HTML string representing the star rating

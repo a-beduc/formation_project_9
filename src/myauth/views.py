@@ -38,7 +38,9 @@ class LoginView(View):
                 login(request, user)
                 return redirect('home')
             else:
-                messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
+                messages.error(
+                    request,
+                    message="Nom d'utilisateur ou mot de passe incorrect.")
         return render(request, self.template_name, context={'form': form})
 
 
