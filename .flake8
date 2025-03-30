@@ -1,0 +1,6 @@
+[flake8]
+exclude =
+    src/myauth/migrations,
+    .venv,
+    src/manage.py,
+    src/litrevu/migrations,
