@@ -19,7 +19,7 @@
                     <li class="navbar__li"><a href="{% url 'home' %}" class="navbar__link {% if request.path == '/home/' %}navbar__active{% endif %}">Flux</a></li>
                     <li class="navbar__li"><a href="{% url 'posts' %}" class="navbar__link {% if request.path == '/posts/' %}navbar__active{% endif %} ">Posts</a></li>
                     <li class="navbar__li"><a href="{% url 'follow' %}" class="navbar__link {% if '/subscription/' in request.path %}navbar__active{% endif %} ">Abonnements</a></li>
-                    <li class="navbar__li"><a href="{% url 'logout' %}" class="navbar__link">Se déconnecter</a></li>
+                    <li class="navbar__li"><a href="{% url 'logout' %}" class="navbar__link">Se déconnecter ({{ request.user.username }})</a></li>
                 </ul>
             {% endif %}
         </nav>
