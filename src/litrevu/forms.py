@@ -85,7 +85,7 @@ class ReviewForm(forms.ModelForm):
 
 class UserFollowForm(forms.Form):
     """
-    Form used to handle the creation and deletion of UserFollows model.
+    Form used to handle the creation and deletion of UserFollow model.
     """
     username = forms.CharField(
         max_length=128,
@@ -99,7 +99,7 @@ class UserFollowForm(forms.Form):
 
 class UserBlockForm(forms.Form):
     """
-    Form used to handle the creation and deletion of UserBlocks model.
+    Form used to handle the creation and deletion of UserBlock model.
     """
     username = forms.CharField(
         max_length=128,

@@ -352,8 +352,8 @@ class BaseRelationView(LoginRequiredMixin, View):
         Get the context for the subscription template, if not specified
         send empty follow and block forms
         :param request: An HttpRequest object.
-        :param follow_form: An instance of forms.UserFollowsForm.
-        :param block_form: An instance of forms.UserBlocksForm.
+        :param follow_form: An instance of forms.UserFollowForm.
+        :param block_form: An instance of forms.UserBlockForm.
         :return: A dictionary of context variables.
         """
         followed = (

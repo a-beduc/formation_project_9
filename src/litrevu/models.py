@@ -97,7 +97,7 @@ class UserFollow(models.Model):
     )
 
     class Meta:
-        # ensures we don't get multiple UserFollows instances
+        # ensures we don't get multiple UserFollow instances
         # for unique user-user_followed pairs
         unique_together = ('user', 'followed_user',)
 
@@ -121,7 +121,7 @@ class UserBlock(models.Model):
     )
 
     class Meta:
-        # ensures we don't get multiple UserBlocks instances
+        # ensures we don't get multiple UserBlock instances
         # for unique user-user_blocked pairs
         unique_together = ('user', 'blocked_user',)
 
