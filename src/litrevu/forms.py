@@ -83,7 +83,7 @@ class ReviewForm(forms.ModelForm):
         return rating
 
 
-class UserFollowsForm(forms.Form):
+class UserFollowForm(forms.Form):
     """
     Form used to handle the creation and deletion of UserFollows model.
     """
@@ -97,7 +97,7 @@ class UserFollowsForm(forms.Form):
     )
 
 
-class UserBlocksForm(forms.Form):
+class UserBlockForm(forms.Form):
     """
     Form used to handle the creation and deletion of UserBlocks model.
     """

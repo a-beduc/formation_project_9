@@ -30,11 +30,11 @@ class HomeView(LoginRequiredMixin, View):
         :return: An HttpResponse object with paginated posts.
         """
         followed = (
-            models.UserFollows.objects.filter(user=request.user).
+            models.UserFollow.objects.filter(user=request.user).
             values_list('followed_user')
         )
         excluded = (
-            models.UserBlocks.objects.filter(user=request.user).
+            models.UserBlock.objects.filter(user=request.user).
             values_list('blocked_user', flat=True)
         )
         reviews = (
@@ -344,8 +344,8 @@ class BaseRelationView(LoginRequiredMixin, View):
     relations for the 'litrevu/subscription.html' template.
     """
     template_name = 'litrevu/subscription.html'
-    form_class_follow = forms.UserFollowsForm
-    form_class_block = forms.UserBlocksForm
+    form_class_follow = forms.UserFollowForm
+    form_class_block = forms.UserBlockForm
 
     def get_context_data(self, request, follow_form=None, block_form=None):
         """
@@ -357,13 +357,13 @@ class BaseRelationView(LoginRequiredMixin, View):
         :return: A dictionary of context variables.
         """
         followed = (
-            models.UserFollows.objects.filter(user=request.user).
+            models.UserFollow.objects.filter(user=request.user).
             select_related('followed_user'))
         following = (
-            models.UserFollows.objects.filter(followed_user=request.user).
+            models.UserFollow.objects.filter(followed_user=request.user).
             select_related('user'))
         blocked = (
-            models.UserBlocks.objects.filter(user=request.user).
+            models.UserBlock.objects.filter(user=request.user).
             select_related('blocked_user'))
         if not follow_form:
             follow_form = self.form_class_follow()
@@ -421,13 +421,13 @@ class FollowView(BaseRelationView):
         try:
             user_to_follow = User.objects.get(username=username_to_follow)
             already_followed = (
-                models.UserFollows.objects.
+                models.UserFollow.objects.
                 filter(user=request.user, followed_user=user_to_follow))
             blocked_by_user = (
-                models.UserBlocks.objects.
+                models.UserBlock.objects.
                 filter(user=request.user, blocked_user=user_to_follow))
             blocked_by_user_to_follow = (
-                models.UserBlocks.objects.
+                models.UserBlock.objects.
                 filter(user=user_to_follow, blocked_user=request.user))
 
             # verify several conditions before creating the follow
@@ -449,7 +449,7 @@ class FollowView(BaseRelationView):
                     message="Vous ne pouvez pas vous suivre vous-même.",
                     extra_tags="follow_message")
             else:
-                new_follow = models.UserFollows.objects.create(
+                new_follow = models.UserFollow.objects.create(
                     user=request.user,
                     followed_user=user_to_follow)
                 new_follow.save()
@@ -487,7 +487,7 @@ class BlockView(BaseRelationView):
         """
         try:
             user_to_block = User.objects.get(username=username_to_block)
-            already_blocked = models.UserBlocks.objects.filter(
+            already_blocked = models.UserBlock.objects.filter(
                 user=request.user, blocked_user=user_to_block)
             if already_blocked.exists():
                 messages.error(
@@ -501,17 +501,17 @@ class BlockView(BaseRelationView):
                     extra_tags="block_message")
             else:
                 block = (
-                    models.UserBlocks.objects.create(
+                    models.UserBlock.objects.create(
                         user=request.user,
                         blocked_user=user_to_block))
                 followed_by_user = (
-                    models.UserFollows.objects.filter(
+                    models.UserFollow.objects.filter(
                         user=request.user,
                         followed_user=user_to_block))
                 if followed_by_user.exists():
                     followed_by_user.delete()
                 followed_by_user_to_block = (
-                    models.UserFollows.objects.filter(
+                    models.UserFollow.objects.filter(
                         user=user_to_block,
                         followed_user=request.user))
                 if followed_by_user_to_block.exists():
@@ -555,7 +555,7 @@ class FollowDeleteView(BaseDeleteView):
     being called.
     """
     def get_relation_from_id(self, relation_id):
-        return models.UserFollows.objects.get(id=relation_id)
+        return models.UserFollow.objects.get(id=relation_id)
 
 
 class BlockDeleteView(BaseDeleteView):
@@ -564,7 +564,7 @@ class BlockDeleteView(BaseDeleteView):
     being called.
     """
     def get_relation_from_id(self, relation_id):
-        return models.UserBlocks.objects.get(id=relation_id)
+        return models.UserBlock.objects.get(id=relation_id)
 
 
 class PostsView(LoginRequiredMixin, View):
