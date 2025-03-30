@@ -41,6 +41,9 @@ class Ticket(models.Model):
             )
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.id} : {self.title}"
+
 
 class Review(models.Model):
     """
@@ -74,8 +77,11 @@ class Review(models.Model):
         auto_now_add=True
     )
 
+    def __str__(self):
+        return f"{self.id} : {self.headline}"
 
-class UserFollows(models.Model):
+
+class UserFollow(models.Model):
     """
     Represents the relationship where a user is following another user.
     """
@@ -91,12 +97,15 @@ class UserFollows(models.Model):
     )
 
     class Meta:
-        # ensures we don't get multiple UserFollows instances
+        # ensures we don't get multiple UserFollow instances
         # for unique user-user_followed pairs
         unique_together = ('user', 'followed_user',)
 
+    def __str__(self):
+        return f"{self.id} : {self.user} - {self.followed_user}"
 
-class UserBlocks(models.Model):
+
+class UserBlock(models.Model):
     """
     Represents the relationship where a user is blocking another user.
     """
@@ -112,6 +121,9 @@ class UserBlocks(models.Model):
     )
 
     class Meta:
-        # ensures we don't get multiple UserBlocks instances
+        # ensures we don't get multiple UserBlock instances
         # for unique user-user_blocked pairs
         unique_together = ('user', 'blocked_user',)
+
+    def __str__(self):
+        return f"{self.id} : {self.user} - {self.blocked_user}"
