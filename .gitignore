@@ -1,3 +1,5 @@
 /.idea
 /.venv
 .env
+Pipfile
+Pipfile.lock
