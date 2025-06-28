@@ -12,8 +12,8 @@ OpenClassroom.
 This is a Django-based web application created for a fictitious company called 
 LITRevu. The application functions as a locally hosted Website where users can 
 request and post book reviews. Developed with **Django Framework**, it 
-proposes an inscription system, a feed where users you can see what users you
-follow posts.
+offers a registration system, a personalized feed where users can view posts
+from users you follow.
 
 ## Features
 
@@ -42,36 +42,36 @@ Ensure you have the following installed on your system:
 
 ### Steps to Install
 
-1. Open a terminal and navigate to your desired directory. 
-2. Clone the project or download the files to your local machine:
+1. Clone the project or download the files to your local machine:
 
     ```bash
-    git clone https://github.com/a-beduc/formation_project_10
-    ```
-3. Create a virtual environment:
-
-    ```bash
-    pipenv shell
-    ```
-
-   - ***(Optional)** You can verify if the virtual environment is correctly created with the 
-following command which should give you the path of the current virtual 
-environment:*
-    ```bash
-    pipenv --venv
-    ```
-
-   - ***(Optional)** You can stop your virtual environment with:*
-    ```bash
-    exit
+    git clone https://github.com/a-beduc/formation_project_9
     ```
    
-    - ***(Optional)** and reactivate it with:*
-   ```bash
-    pipenv shell
-    ```
+2. Create a virtual environment:
+   ```
+   python -m venv .venv
+   source .venv/bin/activate  # Linux
+   .venv\Scripts\activate     # Windows
+   ```
 
-4. Install dependencies:
+<details>
+<summary> Create a venv with pipenv </summary>
+
+```
+pipenv shell
+```
+</details>
+
+3. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+
+
+<details>
+<summary> Install dependencies with pipenv</summary>
+
     ```bash
     pipenv install
     ```
@@ -80,7 +80,12 @@ environment:*
     ```bash
     pipenv install --dev
     ```
-5. ***(Optional)** If you want a new and clean Database*
+</details>
+
+4. ***(Optional)** If you want a new and clean Database*
+
+<details>
+<summary> If you want a new and clean Database</summary>
    - *Delete the current data*
      - *Delete the db.sqlite3 in the src/ directory*
 
@@ -93,19 +98,22 @@ environment:*
    - Create an admin user to access the Admin panel. 
    *You can follow the process to create a new superuser with this 
    [w3school tutorial](https://www.w3schools.com/django/django_admin_create_user.php)*
+</details>
 
-6. Generate a SECRET_KEY:
+5. Generate a SECRET_KEY:
    * Create a .env file at the root of the project (not in /src) by copying the content .env.example 
    * Go to https://djecrety.ir/ to generate a Django SECRET_KEY 
    * Paste the generated key as a string in the .env
    * It should look like : SECRET_KEY='your_unique_generated_secret_key'
 
-7. Navigate to the src directory and start the server:
+
+6. Navigate to the src directory and start the server:
 
     ```bash
     python manage.py runserver
     ``` 
-8. Access the application:
+   
+7. Access the application:
     
     With a web browser:
     ```
@@ -128,3 +136,7 @@ Access the admin panel: http://127.0.0.1:8000/admin
    username: user_two     | password: 53CR37!U53R
    username: user_thr     | password: 53CR37!U53R
    ```
+
+<p align="center">
+    <img alt="Logo of the chess application" style="width:50%; height:auto; border-radius:15px;" src="src/mystatic/images/app-in-use.gif" title="Logo of LITRevu" />
+</p>
