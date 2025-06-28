@@ -42,13 +42,15 @@ Ensure you have the following installed on your system:
 
 ### Steps to Install
 
-1. Clone the project or download the files to your local machine:
+**1. Clone the project or download the files to your local machine:**
 
     ```bash
     git clone https://github.com/a-beduc/formation_project_9
     ```
-   
-2. Create a virtual environment:
+
+-----------
+
+**2. Create a virtual environment:**
    ```
    python -m venv .venv
    source .venv/bin/activate  # Linux
@@ -63,7 +65,9 @@ pipenv shell
 ```
 </details>
 
-3. Install dependencies:
+-----------
+
+**3. Install dependencies:**
    ```
    pip install -r requirements.txt
    ```
@@ -76,16 +80,18 @@ pipenv shell
     pipenv install
     ```
 
-   - ***(Optional)** For development tools (linters), you can also install dev dependencies:*
+   - **(Optional)** For development tools (linters), you can also install dev dependencies:
+
     ```bash
     pipenv install --dev
     ```
 </details>
 
-4. ***(Optional)** If you want a new and clean Database*
+-----------
 
-<details>
-<summary> If you want a new and clean Database</summary>
+<details style="border: 3px black;">
+<summary><b>4. (Optional) If you want a new and clean Database</b></summary>
+
    - *Delete the current data*
      - *Delete the db.sqlite3 in the src/ directory*
 
@@ -100,20 +106,25 @@ pipenv shell
    [w3school tutorial](https://www.w3schools.com/django/django_admin_create_user.php)*
 </details>
 
-5. Generate a SECRET_KEY:
+-----------
+
+**5. Generate a SECRET_KEY:**
    * Create a .env file at the root of the project (not in /src) by copying the content .env.example 
    * Go to https://djecrety.ir/ to generate a Django SECRET_KEY 
    * Paste the generated key as a string in the .env
    * It should look like : SECRET_KEY='your_unique_generated_secret_key'
 
+-----------
 
-6. Navigate to the src directory and start the server:
+**6. Navigate to the src directory and start the server:**
 
     ```bash
     python manage.py runserver
     ``` 
-   
-7. Access the application:
+
+-----------
+
+**7. Access the application:**
     
     With a web browser:
     ```
@@ -138,5 +149,5 @@ Access the admin panel: http://127.0.0.1:8000/admin
    ```
 
 <p align="center">
-    <img alt="Logo of the chess application" style="width:50%; height:auto; border-radius:15px;" src="src/mystatic/images/app-in-use.gif" title="Logo of LITRevu" />
+    <img alt="LITRevu site in use" style="width:60%; height:auto; border-radius:15px;" src="src/mystatic/images/app-in-use.gif" title="Logo of LITRevu" />
 </p>
