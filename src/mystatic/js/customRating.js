@@ -7,6 +7,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const stars = document.getElementsByClassName("formReview__stars__elem");
     const starContainer = document.querySelector(".formReview__stars");
 
+    const starsArray = Array.from(stars);
+    starsArray.forEach((star, i) => {
+        star.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                gfg(i);
+            }
+        })
+        star.addEventListener("click", (event) => {
+            gfg(i);
+        })
+    })
+
     /**
      * Highlights the stars from index up to index n (included)
      * Updates the hidden rating input to the selected value of n.
