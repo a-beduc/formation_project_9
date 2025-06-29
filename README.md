@@ -38,17 +38,14 @@ Ensure you have the following installed on your system:
 
 - [Python 3.7+](https://www.python.org/downloads/)
   - Tested with Python 3.12 should work on Python 3.7+.
-- [Pipenv](https://pipenv.pypa.io/en/latest/installation.html)
 
 ### Steps to Install
 
 **1. Clone the project or download the files to your local machine:**
 
-    ```bash
-    git clone https://github.com/a-beduc/formation_project_9
-    ```
-
------------
+```
+git clone https://github.com/a-beduc/formation_project_9
+```
 
 **2. Create a virtual environment:**
    ```
@@ -57,37 +54,11 @@ Ensure you have the following installed on your system:
    .venv\Scripts\activate     # Windows
    ```
 
-<details>
-<summary> Create a venv with pipenv </summary>
-
-```
-pipenv shell
-```
-</details>
-
------------
-
 **3. Install dependencies:**
    ```
    pip install -r requirements.txt
    ```
 
-
-<details>
-<summary> Install dependencies with pipenv</summary>
-
-    ```bash
-    pipenv install
-    ```
-
-   - **(Optional)** For development tools (linters), you can also install dev dependencies:
-
-    ```bash
-    pipenv install --dev
-    ```
-</details>
-
------------
 
 <details style="border: 3px black;">
 <summary><b>4. (Optional) If you want a new and clean Database</b></summary>
@@ -106,7 +77,6 @@ pipenv shell
    [w3school tutorial](https://www.w3schools.com/django/django_admin_create_user.php)*
 </details>
 
------------
 
 **5. Generate a SECRET_KEY:**
    * Create a .env file at the root of the project (not in /src) by copying the content .env.example 
@@ -114,22 +84,16 @@ pipenv shell
    * Paste the generated key as a string in the .env
    * It should look like : SECRET_KEY='your_unique_generated_secret_key'
 
------------
-
 **6. Navigate to the src directory and start the server:**
 
-    ```bash
-    python manage.py runserver
-    ``` 
-
------------
+```
+python manage.py runserver
+``` 
 
 **7. Access the application:**
-    
-    With a web browser:
-    ```
-    http://127.0.0.1:8000
-    ```
+
+With your web browser, open the link : http://127.0.0.1:8000
+
 
 ### Site Administration
 

@@ -1,7 +1,7 @@
-$primary-color: #FFF1E5;
-$secondary-color: #F4DECB;
+$primary-color: #FCFCFC;
+$secondary-color: #FFF1E5;
 $tertiary-color: #7D6B91;
-$quaternary-color: #FB5607;
+$quaternary-color: #FB5204;
 $quinary-color: #00100B;
 
 $navbar-height: 5rem;
@@ -105,14 +105,25 @@ h1, h2, h3, h4, h5, h6 {
   color: $quinary-color;
 
   &__title {
-    font-weight: bold;
-    font-size: $huge-font-size;
-    line-height: 5rem;
-    color: $primary-color;
-    text-shadow: rgba($quinary-color, 0.5) 3px 3px;
     flex-grow: 1;
     text-align: center;
     cursor: pointer;
+
+
+    &__link {
+      font-weight: bold;
+      font-size: $huge-font-size;
+      line-height: 5rem;
+      color: $primary-color;
+      text-shadow: rgba($quinary-color, 0.5) 3px 3px;
+      text-decoration: none;
+      padding: 5px;
+
+      &:focus {
+        outline: 2px solid $primary-color;
+        outline-offset: 2px;
+      }
+    }
   }
 
   &__list {
@@ -141,8 +152,8 @@ h1, h2, h3, h4, h5, h6 {
     font-size: $medium-font-size;
   }
 
-  &__link:hover, &__active {
-    color: $quaternary-color;
+  &__link:hover{
+    text-decoration: underline;
   }
 }
 
@@ -171,6 +182,12 @@ h1, h2, h3, h4, h5, h6 {
       border: none;
       background: none;
       cursor: pointer;
+
+      &:focus {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 3px;
+        border-radius: 50px;
+      }
     }
 
     &__button:before {
@@ -259,6 +276,11 @@ h1, h2, h3, h4, h5, h6 {
 
     &__button{
       @include basic-button;
+
+      &:focus {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 2px;
+      }
     }
   }
 
@@ -279,11 +301,22 @@ h1, h2, h3, h4, h5, h6 {
 
     &__input {
       @include loginInput;
+
+      &:focus-visible {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 1px;
+        border-radius: 5px;
+      }
     }
 
     &__button {
       @include basic-button;
       align-self: end;
+
+      &:focus {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 2px;
+      }
     }
   }
 }
@@ -322,6 +355,12 @@ h1, h2, h3, h4, h5, h6 {
     @include loginInput;
     width:100%;
     text-align: center;
+
+    &:focus-visible {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 1px;
+        border-radius: 5px;
+    }
   }
 
   &__blockButton {
@@ -332,6 +371,11 @@ h1, h2, h3, h4, h5, h6 {
 
   &__button {
     @include basic-button;
+
+    &:focus {
+      outline: 2px solid $tertiary-color;
+      outline-offset: 2px;
+    }
   }
 }
 
@@ -377,6 +421,11 @@ h1, h2, h3, h4, h5, h6 {
 
     &__button {
       @include basic-button;
+
+      &:focus {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 2px;
+      }
     }
   }
 
@@ -437,6 +486,11 @@ h1, h2, h3, h4, h5, h6 {
       border: inherit;
       cursor: pointer;
       text-align: center;
+
+      &:focus {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 2px;
+      }
     }
   }
 }
@@ -541,8 +595,13 @@ h1, h2, h3, h4, h5, h6 {
       padding: 0.5rem 1rem;
       min-height: 0;
       border-radius: 8px;
-      font-size: $small-font-size;
+      font-size: $medium-font-size;
       font-weight: 600;
+
+      &:focus {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 2px;
+      }
     }
   }
 }
@@ -596,8 +655,13 @@ h1, h2, h3, h4, h5, h6 {
       padding: 0.5rem 1rem;
       min-height: 0;
       border-radius: 8px;
-      font-size: $small-font-size;
+      font-size: $medium-font-size;
       font-weight: 600;
+
+      &:focus {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 2px;
+      }
     }
   }
 
@@ -692,6 +756,12 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0.5rem;
     border-radius: 2px;
     font-family: inherit;
+
+    &:focus-visible {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 1px;
+        border-radius: 2px;
+    }
   }
 
   &__description {
@@ -703,6 +773,12 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0.5rem;
     border-radius: 2px;
     font-family: inherit;
+
+    &:focus-visible {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 1px;
+        border-radius: 2px;
+    }
   }
 
   &__hidden {
@@ -714,6 +790,11 @@ h1, h2, h3, h4, h5, h6 {
     button {
       @include basic-button;
       margin-left: auto;
+
+      &:focus {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 2px;
+      }
     }
   }
 
@@ -724,8 +805,13 @@ h1, h2, h3, h4, h5, h6 {
       padding: 0.5rem 1rem;
       min-height: 0;
       border-radius: 8px;
-      font-size: $small-font-size;
+      font-size: $medium-font-size;
       font-weight: 600;
+
+      &:focus {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 2px;
+      }
     }
 
     &__delete {
@@ -734,8 +820,13 @@ h1, h2, h3, h4, h5, h6 {
       padding: 0.5rem 1rem;
       min-height: 0;
       border-radius: 8px;
-      font-size: $small-font-size;
+      font-size: $medium-font-size;
       font-weight: 600;
+
+      &:focus {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 2px;
+      }
     }
   }
 }
@@ -784,6 +875,12 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0.5rem;
     border-radius: 2px;
     font-family: inherit;
+
+    &:focus-visible {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 1px;
+        border-radius: 2px;
+    }
   }
 
   &__body {
@@ -795,6 +892,12 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0.5rem;
     border-radius: 2px;
     font-family: inherit;
+
+    &:focus-visible {
+        outline: 2px solid $tertiary-color;
+        outline-offset: 1px;
+        border-radius: 2px;
+    }
   }
 
   &__hidden {
@@ -802,8 +905,23 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   &__stars {
-    &__elem:hover {
-      cursor: pointer;
+
+    &__elem {
+
+      &:focus {
+        transform: scale(1.3);
+      }
+
+      :hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__button {
+    &:focus {
+      outline: 2px solid $tertiary-color;
+      outline-offset: 2px;
     }
   }
 }

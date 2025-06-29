@@ -13,13 +13,13 @@
         <form action ="" method="post" enctype="multipart/form-data" class="formReview__form">
             {% csrf_token %}
             {{ form.as_p }}
-            <div class="formReview__stars" data-rating="{{ review.rating|default:0 }}">
-                <span class="formReview__stars__elem fa-stop" onclick="gfg(0)"></span>
-                <span class="formReview__stars__elem fa-star" onclick="gfg(1)"></span>
-                <span class="formReview__stars__elem fa-star" onclick="gfg(2)"></span>
-                <span class="formReview__stars__elem fa-star" onclick="gfg(3)"></span>
-                <span class="formReview__stars__elem fa-star" onclick="gfg(4)"></span>
-                <span class="formReview__stars__elem fa-star" onclick="gfg(5)"></span>
+            <div aria-label="Star notation" role="radiogroup" class="formReview__stars" data-rating="{{ review.rating|default:0 }}">
+                <span aria-label="0 star" role=radio tabindex=0 class="formReview__stars__elem fa-stop"></span>
+                <span aria-label="1 star" role=radio tabindex=0 class="formReview__stars__elem fa-star"></span>
+                <span aria-label="2 stars" role=radio tabindex=0 class="formReview__stars__elem fa-star"></span>
+                <span aria-label="3 stars" role=radio tabindex=0 class="formReview__stars__elem fa-star"></span>
+                <span aria-label="4 stars" role=radio tabindex=0 class="formReview__stars__elem fa-star"></span>
+                <span aria-label="5 stars" role=radio tabindex=0 class="formReview__stars__elem fa-star"></span>
             </div>
             <div class="formReview__action">
                 <button type="submit" role="button" class="formReview__button">Envoyer</button>

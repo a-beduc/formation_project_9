@@ -9,7 +9,7 @@
                         class="paginator__button"
                     
                 >
-                    <img src={% static 'images/arrowhead-left-outline-svgrepo-com.svg' %}>
+                    <img src="{% static 'images/arrowhead-left-outline-svgrepo-com.svg' %}" alt="Double arrow going left">
                 </a>
         
                 <a 
@@ -18,7 +18,7 @@
                     {% endif %}
                         class="paginator__button"
                 >
-                    <img src={% static 'images/arrow-ios-back-outline-svgrepo-com.svg' %}>
+                    <img src="{% static 'images/arrow-ios-back-outline-svgrepo-com.svg' %}" alt="Arrow going left">
                 </a>
 
         </span>
@@ -34,7 +34,7 @@
                     {% endif %}
                         class="paginator__button"
                 >
-                    <img src="{% static 'images/arrow-ios-forward-outline-svgrepo-com.svg' %}">
+                    <img src="{% static 'images/arrow-ios-forward-outline-svgrepo-com.svg' %}" alt="Double arrow going right">
                 </a>
                 <a 
                     {% if page_obj.has_next %}
@@ -42,7 +42,7 @@
                     {% endif %}
                         class="paginator__button"
                 >
-                    <img src="{% static 'images/arrowhead-right-outline-svgrepo-com.svg' %}">
+                    <img src="{% static 'images/arrowhead-right-outline-svgrepo-com.svg' %}" alt="Arrow going right">
                 </a>
         </span>
     </div>
