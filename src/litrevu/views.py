@@ -128,6 +128,8 @@ class TicketUpdateView(LoginRequiredMixin, View):
         """
         ticket = models.Ticket.objects.get(id=ticket_id)
         form = self.form_class(instance=ticket)
+        if not ticket.user == request.user:
+            return redirect(self.request.META.get('HTTP_REFERER', 'home'))
         return render(request, self.template_name,
                       context={'form': form, 'ticket': ticket})
 
@@ -147,6 +149,8 @@ class TicketUpdateView(LoginRequiredMixin, View):
         form = (
             self.form_class(request.POST, request.FILES, instance=ticket)
         )
+        if not ticket.user == request.user:
+            return redirect(self.request.META.get('HTTP_REFERER', 'home'))
         if form.is_valid():
             form.save()
             return redirect('home')
@@ -235,6 +239,9 @@ class ReviewUpdateView(LoginRequiredMixin, View):
         :return: HttpResponse with a populated Review Form
         """
         review = models.Review.objects.get(id=review_id)
+        if not review.user == request.user:
+            return redirect(self.request.META.get('HTTP_REFERER', 'home'))
+
         ticket = models.Ticket.objects.get(id=review.ticket.id)
         ticket.user_has_reviewed = (
             ticket.review_set.filter(user=request.user).exists())
@@ -254,6 +261,9 @@ class ReviewUpdateView(LoginRequiredMixin, View):
         populated Review Form on invalid submission.
         """
         review = models.Review.objects.get(id=review_id)
+        if not review.user == request.user:
+            return redirect(self.request.META.get('HTTP_REFERER', 'home'))
+
         ticket = models.Ticket.objects.get(id=review.ticket.id)
         ticket.user_has_reviewed = (
             ticket.review_set.filter(user=request.user).exists())
